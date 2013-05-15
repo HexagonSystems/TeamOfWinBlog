@@ -1,107 +1,243 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
 class User
 {
-	private $firstName;
-	private $lastName;
-	private $username;
-	private $pass;
-	private $email;
-	private $firstLogin;
-	private $lastLogin;
-	private $accessLevel;
-	
+    private $database;
+    private $username;
+    public $password;
+    private $email;
+    private $firstLogin;
+    private $lastLogin;
+    private $accessLevel;
 
-	public function __construct($username, $firstName, $lastName, $pass, $email, $firstLogin, $lastLogin, $accessLevel)
-	{
-		$this->username = $username;
-		$this->firstName = $firstName;
-		$this->lastName = $lastName;
-		$this->pass = $pass;
-		$this->email = $email;
-		$this->firstLogin = $firstLogin;
-		$this->lastLogin = $lastLogin;
-		$this->accessLevel = $accessLevel;
-		
-	} //end constructor
-	
-	//Username
-	public function setUsername($username)
-	{
-		$this->username = $username;
-	}
-	public function getUsername()
-	{
-		return $this->username;
-	}
-	
-	//First name
-	public function setFirstName($firstName)
-	{
-		$this->firstName = $firstName;
-	}
-	public function getFirstName()
-	{
-		return $this->firstName;
-	}
-	
-	//Last name
-	public function setLastName($lastName)
-	{
-		$this->lastName = $lastName;
-	}
-	public function getlastName()
-	{
-		return $this->lastName;
-	}
-	
-	//Email
-	public function setEmail($email)
-	{
-		$this->email = $email;
-	}
-	public function getEmail()
-	{
-		return $this->email;
-	}
-	
-	//Password
-	public function setPass($pass)
-	{
-		$this->pass = $pass;
-	}
-	public function getPass()
-	{
-		return $this->pass;
-	}
-	
-	//First Login
-	public function setFirstLogin($firstLogin)
-	{
-		$this->firstLogin = $firstLogin;
-	}
-	public function getFirstLogin()
-	{
-		return $this->firstLogin;
-	}
-	
-	//Last Login
-	public function setLastLogin($lastLogin)
-	{
-		$this->lastLogin = $lastLogin;
-	}
-	public function getlastLogin()
-	{
-		return $this->lastLogin;
-	}
-	
-	//Access Level
-	public function setAccessLevel($accessLevel)
-	{
-		$this->accessLevel = $accessLevel;
-	}
-	public function getAccessLevel()
-	{
-		return $this->accessLevel;
-	}
+    /**
+     * Constructor with extra quick create/login
+     * @param type $database sets the database connection
+     * @param type $userArray Optional must contain a key of "new" or "login" needs "username", "password" [, "email", "accessLevel"]
+     * @return type returns this object
+     */
+    public function __construct( PDO $database, $userArray = array('') )
+    {
+
+        $this->database = $database;
+        
+        if( isset($userArray["new"]) ){
+
+            $this->createUser($userArray["username"], $userArray["password"], $userArray["email"], $userArray["accessLevel"]);
+
+            return($this);
+
+        }elseif (isset($userArray["login"]) ) {
+
+            $this->loginUser($userArray["username"], $userArray["password"]);
+
+            return($this);
+        }
+        
+
+    }
+
+
+    /**
+     * Creates a new user
+     * And set of sane Defaults
+     * 
+     * @param type $username
+     * @param type $password
+     * @param type $email
+     * @param type $firstLogin
+     * @param type $lastLogin
+     * @param type $accessLevel
+     */
+    public function createUser($username, $password, $email, $accessLevel)
+    {            
+        if($this->checkUsername($username) == "Username not found"){
+
+            $this->setUsername($username);
+
+            if($this->checkEmail($email) == "Email not found"){
+
+                $this->setEmail($email);
+
+            }else{
+
+                return($this->checkEmail($email));
+
+            }
+
+            $this->setPassword($password);
+
+            $this->setFirstLogin();
+            //$this->setLastLogin(time());
+
+            $this->setAccessLevel($accessLevel);
+
+            //If success return this object
+            return($this);
+
+        }else{
+
+            return($this->checkUsername($username));
+        }
+
+        return($this);
+
+    } //end createUser
+
+    public function checkUsername($username)
+    {
+
+        try{
+           $user = $this->database->query("select * from users  where username = '$username'")->fetch();
+
+        }catch(Exception $e){
+           throw new Exception( 'Database error:', 0, $e);
+           return;
+        };
+
+        if($user !== false){
+           return("Username found");
+        }else{
+           return("Username not found");
+        }
+
+    }// end checkUsername
+
+    public function checkEmail($email)
+    {
+
+        try{
+            $user = $this->database->query("select * from users where email = '$email'")->fetch();
+
+        }catch(Exception $e){
+            throw new Exception( 'Database error:', 0, $e);
+            return;
+        };
+
+        if($user !== false){
+            return("Email found");
+        }else{
+            return("Email not found");
+        }
+
+    }// end checkEmail
+     
+          
+    public function checkPassword($password)
+    {
+        $password = sha1($password);
+        
+        if($this->getPassword() === $password){
+            return true;
+        }  else {
+            return false;
+        }
+    }// end checkPassword
+
+
+    public function loginUser($username, $password)
+    {
+        if($this->checkUsername($username) == "Username not found"){
+            return("Username not found");
+        }
+
+        //Collect User from the database
+        try{
+            //returns multidemnsional array
+            $user = $this->database->query("select * from tow.user where username = $username");
+
+        }catch(Exception $e){
+            throw new Exception( 'Database error:', 0, $e);
+            return;
+        };
+
+        //map the single row to be the whole array
+        $user = $user[0];
+
+        //Set the password
+        $this->setPassword($user["password"]);
+
+        if($this->checkPassword($password)){
+            //Else errors
+            return("Password Incorrect");
+        };
+
+        $this->setUsername($user["username"]);
+
+        $this->setEmail($user["email"]);
+
+        //$this->firstLogin = $firstLogin;
+        $this->setLastLogin();
+
+        $this->setAccessLevel($user['ACL']);
+
+        //If success return this object
+        return($this);
+
+    }//end loginUser
+
+    //Username
+    public function setUsername($username)
+    {
+          $this->username = $username;
+    }
+    public function getUsername()
+    {
+          return $this->username;
+    }
+
+    //Email
+    public function setEmail($email)
+    {
+          $this->email = $email;
+    }
+    public function getEmail()
+    {
+          return $this->email;
+    }
+
+    //Password
+    public function setPassword($password)
+    {
+      $password = sha1($password);
+      $this->password = $password;
+    }
+    public function getPassword()
+    {
+          return $this->password;
+    }
+
+    //First Login
+    public function setFirstLogin()
+    {
+          $this->firstLogin = time();
+    }
+    public function getFirstLogin()
+    {
+          return $this->firstLogin;
+    }
+
+    //Last Login
+    public function setLastLogin()
+    {
+          $this->lastLogin = time();
+    }
+    public function getlastLogin()
+    {
+          return $this->lastLogin;
+    }
+
+    //Access Level
+    public function setAccessLevel($accessLevel)
+    {
+          $this->accessLevel = $accessLevel;
+    }
+    public function getAccessLevel()
+    {
+          return $this->accessLevel;
+    }
 } //end class
 ?>
