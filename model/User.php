@@ -43,7 +43,6 @@ class User
 
     /**
      * Creates a new user
-     * And set of sane Defaults
      * 
      * @param type $username
      * @param type $password
@@ -178,6 +177,35 @@ class User
         return($this);
 
     }//end loginUser
+    
+    /**
+     * Save user to database
+     * 
+     * @todo Get this working correctly the current INSERT is in correct
+     * @return string - Either error messages or saved
+     */
+    public function Save() {
+        
+        try{
+            
+            $statement = "INSERT INTO `users` (`username`, `email`, `userPassword`, `createDate`, `ACL`, `lastLoginDate`)
+                                       VALUES (:username, :email, :userPassword, :ACL)";
+
+            $statement = $this->database->prepare($statement);
+
+            $statement->execute(array( ':username' => $this->getUsername()
+                        , ':email' => $this->getEmail()
+                        , ':userPassword' => $this->getPassword()
+                        , ':ACL' => $this->getAccessLevel()
+                        ));
+
+        }catch(Exception $e){
+            throw new Exception( 'Database error:', 0, $e);
+            return;
+        };
+        
+        return("saved");
+    }
 
     //Username
     public function setUsername($username)
