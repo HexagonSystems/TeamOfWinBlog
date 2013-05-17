@@ -157,7 +157,7 @@ class User
         //$user = $user[0];
 
         //Set the password
-        $this->setPassword($user["userPassword"]);
+        $this->setPassword($user["userPassword"], "old");
 
         if(!$this->checkPassword($password)){
             //Else errors
@@ -227,10 +227,14 @@ class User
           return $this->email;
     }
 
-    //Password
-    public function setPassword($password, $new = 0)
+    /**
+     * Set Password, change the value of old when setting an already encrypted password
+     * @param string $password
+     * @param string $old - If unset will encrypt the incoming password
+     */
+    public function setPassword($password, $old = 0)
     {
-        if($new !== 0)
+        if($old === 0)
             $password = sha1($password);
         
         $this->password = $password;
