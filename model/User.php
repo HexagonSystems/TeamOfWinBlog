@@ -15,9 +15,9 @@ class User
 
     /**
      * Constructor with extra quick create/login
-     * @param type $database sets the database connection
-     * @param type $userArray Optional must contain a key of "new" or "login" needs "username", "password" [, "email", "accessLevel"]
-     * @return type returns this object
+     * @param PDO $database sets the database connection
+     * @param Array $userArray Optional must contain a key of "new" or "login" needs "username", "password" [, "email", "accessLevel"]
+     * @return Object or String returns this object
      */
     public function __construct( PDO $database, $userArray = array('') )
     {
@@ -44,12 +44,10 @@ class User
     /**
      * Creates a new user
      * 
-     * @param type $username
-     * @param type $password
-     * @param type $email
-     * @param type $firstLogin
-     * @param type $lastLogin
-     * @param type $accessLevel
+     * @param String $username
+     * @param String $password
+     * @param String $email
+     * @param Int $accessLevel
      */
     public function createUser($username, $password, $email, $accessLevel)
     {            
@@ -86,6 +84,14 @@ class User
 
     } //end createUser
 
+    /**
+     * Tests if username exists in Database
+     * Can be used to check the user has the right username or check the user isn't trying to
+     * register a username that already exists
+     * @param String $username
+     * @return String
+     * @throws Exception
+     */
     public function checkUsername($username)
     {
 
@@ -105,6 +111,14 @@ class User
 
     }// end checkUsername
 
+    /**
+     * Tests if email exists in Database
+     * Can be used to check the user has the right email or check the user isn't trying to
+     * register an email that already exists
+     * @param String $email
+     * @return String either "Email found" or "Email not found"
+     * @throws Exception
+     */
     public function checkEmail($email)
     {
 
@@ -124,10 +138,15 @@ class User
 
     }// end checkEmail
      
-          
+    /**
+     * Checks if a string matches the password. Does NOT set the Password
+     * @todo Need to add an error check if password hasn't been set yet
+     * @param String $password
+     * @return boolean
+     */      
     public function checkPassword($password)
     {
-        //$password = sha1($password);
+        $password = sha1($password);
         
         if($this->getPassword() === $password){
             return true;
@@ -136,7 +155,14 @@ class User
         }
     }// end checkPassword
 
-
+    /**
+     * Wraps checking Username and Password together
+     * @todo Set Up calls to create session for user if successful
+     * @param String $username
+     * @param String $password
+     * @return String/Object
+     * @throws Exception
+     */
     public function loginUser($username, $password)
     {
         if($this->checkUsername($username) == "Username not found"){
@@ -157,15 +183,13 @@ class User
         $user = $user[0];
 
         //Set the password
-        $this->setPassword($user["password"]);
+        $this->setPassword($user["userPassword"], "old");
 
         if(!$this->checkPassword($password)){
             //Else errors
             return("Password Incorrect");
         };
 			
-        
-        echo "Login succussful!";
         $this->setUsername($user["username"]);
 
         $this->setEmail($user["email"]);
@@ -175,8 +199,6 @@ class User
 
         $this->setAccessLevel($user['ACL']);
         
-        
-
         //If success return this object
         return($this);
 
@@ -188,11 +210,11 @@ class User
      * @todo Get this working correctly the current INSERT is in correct
      * @return string - Either error messages or saved
      */
-    public function Save() {
+    public function save() {
         
         try{
             
-            $statement = "INSERT INTO `users` (`username`, `email`, `userPassword`, `createDate`, `ACL`, `lastLoginDate`)
+            $statement = "INSERT INTO `users` (`username`, `email`, `userPassword`, `ACL`)
                                        VALUES (:username, :email, :userPassword, :ACL)";
 
             $statement = $this->database->prepare($statement);
@@ -211,7 +233,11 @@ class User
         return("saved");
     }
 
-    //Username
+    /**
+     * Set the username for the user
+     * @todo go private on this I don't think it should be a public method
+     * @param String $username
+     */
     public function setUsername($username)
     {
           $this->username = $username;
@@ -221,7 +247,11 @@ class User
           return $this->username;
     }
 
-    //Email
+    /**
+     * Sets the users email
+     * @todo Add check for well formedness?
+     * @param String $email
+     */
     public function setEmail($email)
     {
           $this->email = $email;
@@ -231,10 +261,16 @@ class User
           return $this->email;
     }
 
-    //Password
-    public function setPassword($password)
+    /**
+     * Set Password, change the value of old when setting an already encrypted password
+     * @param string $password
+     * @param string $old - If unset will encrypt the incoming password
+     */
+    public function setPassword($password, $old = 0)
     {
+        if($old === 0)
       $password = sha1($password);
+        
       $this->password = $password;
     }
     public function getPassword()
@@ -262,7 +298,11 @@ class User
           return $this->lastLogin;
     }
 
-    //Access Level
+    /**
+     * Sets the access level for the user
+     * @todo Add Sanity checks in here and return values
+     * @param Int $accessLevel
+     */
     public function setAccessLevel($accessLevel)
     {
           $this->accessLevel = $accessLevel;
