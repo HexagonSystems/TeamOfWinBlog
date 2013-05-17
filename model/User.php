@@ -1,8 +1,5 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-
 class User
 {
     private $database;
@@ -148,6 +145,9 @@ class User
     {
         $password = sha1($password);
         
+        //var_dump($password);
+        //var_dump($this->getPassword());
+        
         if($this->getPassword() === $password){
             return true;
         }  else {
@@ -172,7 +172,7 @@ class User
         //Collect User from the database
         try{
             //returns multidemnsional array
-            $user = $this->database->query("select * from users where username = $username");
+            $user = $this->database->query("select * from users where username = '$username'")->fetch();
 
         }catch(Exception $e){
             throw new Exception( 'Database error:', 0, $e);
@@ -180,7 +180,7 @@ class User
         };
 
         //map the single row to be the whole array
-        $user = $user[0];
+        //$user = $user[0];
 
         //Set the password
         $this->setPassword($user["userPassword"], "old");
