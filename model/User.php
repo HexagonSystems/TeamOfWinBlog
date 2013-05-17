@@ -146,7 +146,7 @@ class User
         //Collect User from the database
         try{
             //returns multidemnsional array
-            $user = $this->database->query("select * from tow.user where username = $username");
+            $user = $this->database->query("select * from users  where username = '$username'")->fetch();
 
         }catch(Exception $e){
             throw new Exception( 'Database error:', 0, $e);
@@ -154,12 +154,12 @@ class User
         };
 
         //map the single row to be the whole array
-        $user = $user[0];
+        //$user = $user[0];
 
         //Set the password
-        $this->setPassword($user["password"]);
+        $this->setPassword($user["userPassword"]);
 
-        if($this->checkPassword($password)){
+        if(!$this->checkPassword($password)){
             //Else errors
             return("Password Incorrect");
         };
@@ -184,11 +184,11 @@ class User
      * @todo Get this working correctly the current INSERT is in correct
      * @return string - Either error messages or saved
      */
-    public function Save() {
+    public function save() {
         
         try{
             
-            $statement = "INSERT INTO `users` (`username`, `email`, `userPassword`, `createDate`, `ACL`, `lastLoginDate`)
+            $statement = "INSERT INTO `users` (`username`, `email`, `userPassword`, `ACL`)
                                        VALUES (:username, :email, :userPassword, :ACL)";
 
             $statement = $this->database->prepare($statement);
@@ -228,10 +228,12 @@ class User
     }
 
     //Password
-    public function setPassword($password)
+    public function setPassword($password, $new = 0)
     {
-      $password = sha1($password);
-      $this->password = $password;
+        if($new !== 0)
+            $password = sha1($password);
+        
+        $this->password = $password;
     }
     public function getPassword()
     {
