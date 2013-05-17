@@ -1,11 +1,10 @@
 <?php
-echo "<strong>Information on how the router sees the requests</strong> <br />";
 class Router
 {
-	public function __Construct()
+	public function __construct($conn)
 	{
 	}
-	Static public function route()
+	Static public function route($conn)
 	{
 		//fetch the passed request
 		$request = $_SERVER['QUERY_STRING'];
@@ -24,40 +23,30 @@ class Router
 		}
 		if(isset($page[1]))
 		{
-			if($page[1] == "page1")
-			{
-				echo "The page your requested is '$page[1]' Get a list off all persons";
-				echo '<br/>';
-				$vars = print_r($getVars, TRUE);
-				echo "The following GET vars were passed to the page:<pre>".$vars."</pre>";
-				include_once("controller/PersonController.php");
-				$controller = new PersonController();
-				$controller->invoke();
-			}
-			else if($page[1] == "page2")
-			{
-				echo "The page your requested is '$page[1]' Get details of a person with id of ". $_GET['id'];
-				echo '<br/>';
-				$vars = print_r($getVars, TRUE);
-				echo "The following GET vars were passed to the page:<pre>".$vars."</pre>";
-				include_once("controller/PersonController.php");
-				$controller = new PersonController();
+			if($page[1] == "indexPage"){
+				include_once("controller/IndexController.php");
+				$controller = new IndexController();
 				$controller->invoke();
 			}
 			else if($page[1] == "loginPage"){
-				//echo "The page your requested is '$page[1]' Get details of a person with id of ". $_GET['username'];
-				echo '<br/>';
-				$vars = print_r($getVars, TRUE);
-				echo "The following GET vars were passed to the page:<pre>".$vars."</pre>";
-				include_once("controller/LoginController.php");
-				$controller = new LoginController();
-				$controller->invoke();
+				if(isset($page[2])){
+					if($page[2] == "login"){
+						include_once("controller/LoginController.php");
+						$controller = new LoginController($conn);
+						$controller->invoke();
+					}
+				}else
+				{
+					include_once("controller/LoginController.php");
+					$controller = new LoginController($conn);
+					$controller->invoke();
+				}
 			}
 		}
 
 		else
 		{
-			include_once("controller/PersonController.php");$controller = new PersonController();
+			include_once("controller/IndexController.php");$controller = new IndexController();
 			$controller->invoke();
 		}
 	}// end route

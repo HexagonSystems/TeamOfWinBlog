@@ -1,4 +1,8 @@
-<footer>
+<!-- End of content div -->
+</div>
+
+<!-- Footer -->
+<footer id="footer">
 	<p class="copyright">
 		&copy;
 		<?php echo "Team Of Win" ?>
