@@ -2,7 +2,7 @@
 /**
  * Handles the view functionality of our MVC framework
  */
-class PersonsView
+class IndexView
 {
 	/**
 	 * Holds variables assigned to template
@@ -75,7 +75,12 @@ class PersonsView
 		//render view
 		include_once($this->header);
 		include_once($this->nav);
+		try{
 		include_once($this->render);
+		}
+		catch(Exception $e){
+			
+		}
 		include_once($this->footer);
 	}
 } //end class

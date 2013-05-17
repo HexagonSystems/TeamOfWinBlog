@@ -1,0 +1,39 @@
+@CHARSET "ISO-8859-1";
+
+#header{
+	background:#EAF3F4;
+	height:50px;
+	display:block;
+}
+
+#header header{
+	font-size:20px;
+	display:inline-block;
+	float:left;
+	
+}
+
+nav{
+	text-align:center;
+	position:relative;;
+	top:50%;
+}
+
+nav ul{
+}
+
+nav li{
+	display:inline-block;
+	padding: 5 10px;
+}
+
+nav a{
+	text-decoration:none;
+	color: black;
+	font-size: 18px;
+	padding: 10px;
+}
+
+nav li:hover{
+	background:#CCE0E8;
+}
