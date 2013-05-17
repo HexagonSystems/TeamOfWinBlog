@@ -2,12 +2,14 @@
 <html>
 <!-- the head section -->
 <head>
-<title>Person Web Applicaion using OOP MVC</title>
+<title>TOW - Blog</title>
 <link rel="stylesheet" type="text/css" href="includes/css/main.css" />
+<link rel="stylesheet" type="text/css" href="includes/css/header.css" />
+<link rel="stylesheet" type="text/css" href="includes/css/footer.css" />
 </head>
 <!-- the body section -->
 <body>
 	<div class="container">
-		<header>
-			<h1>Person Web Applicaion using OOP MVC</h1>
-		</header>
+		<header id="header">
+			<header>TOW Blog Website 02</header>
+		
