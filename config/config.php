@@ -2,8 +2,8 @@
 /**
  * Define document paths
  */
-define('SERVER_ROOT' , 'I:\xampp\htdocs\workspace\TOW_BLOG_01');
-define('SITE_ROOT' , 'http://localhost/workspace/TOW_BLOG_01');
+define('SERVER_ROOT' , 'I:\xampp\htdocs\workspace\TeamOfWinBlog');
+define('SITE_ROOT' , 'http://localhost/workspace/TeamOfWinBlog');
 /**
  * Define database connection if using a database
 */

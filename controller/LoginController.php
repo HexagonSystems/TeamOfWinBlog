@@ -10,21 +10,23 @@ class LoginController
 	private $nav;
 	private $conn;
 
-	private $fileName = 'loginView';
+	private $loggedOutView = 'loginView';
+	private $loggedInView = 'loggedInView';
+
 	public function __construct(PDO $conn)
 	{
 		$this->header = 'includes/header.php';
 		$this->footer = 'includes/footer.php';
 		$this->nav = 'includes/nav.php';
 		$this->conn = $conn;
-		
+
 	} //end constructor
 	public function invoke()
 	{
 		if (!isset($_GET['action']))
 		{
-			$this->template = 'view/'.$this->fileName.'Template.php';
-			include_once('view/'.$this->fileName.'.php');
+			$this->template = 'view/'.$this->loggedOutView.'Template.php';
+			include_once('view/'.$this->loggedOutView.'.php');
 			//create a new view and pass it our template
 			$view = new LoginView($this->template,$this->header,$this->footer,$this->nav);
 			$content ="";
@@ -34,30 +36,66 @@ class LoginController
 			if($_GET['action'] == 'login')
 			{
 				$user = new User($this->conn);
-				if(isset($_POST['username']))
+				if(isset($_POST['username']) && isset($_POST['pass']))
 				{
-					if(isset($_POST['pass']))
-					{
-						$user = $user->loginUser($_POST["username"], $_POST["pass"]);
-						if(!is_a($user, 'User')){
-							echo $user;
-						}else 
-						{
-							echo $user->getEmail();
-						}
+					$user = $user->loginUser($_POST["username"], $_POST["pass"]);
+					if(!is_a($user, 'User')){
+						//NOt logged In
+						echo $user;
+						$this->template = 'view/'.$this->$loggedOutView.'Template.php';
+						include_once('view/'.$this->$loggedOutView.'.php');
+						//create a new view and pass it our template
+						$view = new LoginView($this->template,$this->header,$this->footer,$this->nav);
+						$content ="";
+						$view->assign('title' , 'Loggged in');
+						$view->assign('content' , $content);
 					}else
 					{
-						//if $_POST['password'] isn't set
+						echo $user->getEmail();
 					}
 				}else
 				{
-					//if $_POST['username'] isn't set
+					//if $_POSTs arn't set
+					//NOt logged In
+					echo "Post not set";
+					$this->template = 'view/'.$this->$loggedOutView.'Template.php';
+					include_once('view/'.$this->$loggedOutView.'.php');
+					//create a new view and pass it our template
+					$view = new LoginView($this->template,$this->header,$this->footer,$this->nav);
+					$content ="";
+					$view->assign('title' , 'Loggged in');
+					$view->assign('content' , $content);
 				}
-				
+
+			}else if($_GET['action'] == 'register')
+			{
+				echo "attempting to register<br/>";
+				$user = new User($this->conn);
+				if(isset($_POST['username']) && isset($_POST['pass']) && isset($_POST['email']))
+				{
+					$user = $user->createUser($_POST["username"], $_POST["pass"], $_POST["email"], "1");
+					if(!is_a($user, 'User')){
+						//NOt logged In
+						echo $user;
+						$this->template = 'view/'.$this->$loggedOutView.'Template.php';
+						include_once('view/'.$this->$loggedOutView.'.php');
+						//create a new view and pass it our template
+						$view = new LoginView($this->template,$this->header,$this->footer,$this->nav);
+						$content ="";
+						$view->assign('title' , 'Loggged in');
+						$view->assign('content' , $content);
+					}else
+					{
+						echo $user->save();
+						
+					}
+				}
+			}else{
+				echo "failed";
 			}
 		}
 		{
-			
+
 		}
 
 	} // end function

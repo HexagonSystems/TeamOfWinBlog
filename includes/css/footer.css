@@ -1,6 +1,11 @@
 @CHARSET "ISO-8859-1";
 #footer{
-	background:#EAF3F4;
-	padding:20px;
+	background:#B0B0B0;
+	padding:5px;
+	height:25px;
 	text-align:center;
+	position:fixed;
+	bottom:0px;
+	width:100%;
+	z-index:1;
 }
