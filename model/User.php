@@ -157,7 +157,8 @@ class User
      */      
 	public function checkPassword($password)
 	{
-        $password = sha1($password);
+            
+            $password = sha1($password);
 
 		if($this->getPassword() === $password){
 			return true;
@@ -209,7 +210,7 @@ class User
 		};
 			
 
-		echo "Login succussful!";
+		//echo "Login succussful!";
 		$this->setUsername($user["username"]);
 
 		$this->setEmail($user["email"]);
@@ -218,8 +219,6 @@ class User
 		$this->setLastLogin();
 
 		$this->setAccessLevel($user['ACL']);
-
-
 
 		//If success return this object
 		return($this);
@@ -349,5 +348,20 @@ class User
 			session_unset('accountObject');
 		}
 	}
+        
+    public function __sleep() {
+        return array( 'username'
+                    , 'password'
+                    , 'email'
+                    , 'firstLogin'
+                    , 'lastLogin'
+                    , 'accessLevel'
+                    );
+    }
+    
+    public function setDatabase(PDO $database) {
+        $this->database = $database;
+    }
+
 } //end class
 ?>
