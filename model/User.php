@@ -7,7 +7,7 @@ class User
 {
 	private $database;
 	private $username;
-	public $password;
+	private $password;
 	private $email;
 	private $firstLogin;
 	private $lastLogin;
