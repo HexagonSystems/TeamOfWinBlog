@@ -7,7 +7,8 @@ class Router
 	Static public function route($conn)
 	{
 		$getVars = $_GET;
-                $page = $getVars['location'];
+                
+                $page = isset($getVars['location']) ? $getVars['location'] : 'empty';
                 
             switch ($page) {
                 
