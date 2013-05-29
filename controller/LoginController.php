@@ -51,7 +51,8 @@ class LoginController
 						$view->assign('content' , $content);
 					}else
 					{
-						echo $user->getEmail();
+                                            $user->sessionCreate();
+                                            echo $user->getEmail();
 					}
 				}else
 				{

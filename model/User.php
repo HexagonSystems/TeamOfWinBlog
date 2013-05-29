@@ -233,26 +233,26 @@ class User
 	 */
     public function save() {
 
-		try{
+        try{
 
             $statement = "INSERT INTO `users` (`username`, `email`, `userPassword`, `ACL`)
-                                       VALUES (:username, :email, :userPassword, :ACL)";
+                               VALUES (:username, :email, :userPassword, :ACL)";
 
-			$statement = $this->database->prepare($statement);
+            $statement = $this->database->prepare($statement);
 
-			$statement->execute(array( ':username' => $this->getUsername()
-					, ':email' => $this->getEmail()
-					, ':userPassword' => $this->getPassword()
-					, ':ACL' => $this->getAccessLevel()
-			));
+            $statement->execute(array(':username' => $this->getUsername()
+                                    , ':email' => $this->getEmail()
+                                    , ':userPassword' => $this->getPassword()
+                                    , ':ACL' => $this->getAccessLevel()
+                                ));
 
-		}catch(Exception $e){
-			throw new Exception( 'Database error:', 0, $e);
-			return;
-		};
+        }catch(Exception $e){
+                throw new Exception( 'Database error:', 0, $e);
+                return;
+        };
 
-		return("saved");
-	}
+        return("saved");
+    }
 
     /**
      * Set the username for the user

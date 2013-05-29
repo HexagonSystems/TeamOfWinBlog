@@ -6,6 +6,9 @@
  * attempted to login which it will return as a boolean. If the log in event is
  * a failure (tested in the user class) the class must be called again with
  * loginFailed()
+ * 
+ * @version 1000
+ * @author Stephen McMahon <stephentmcm@gmail.com>
  */
 class LoginTracker {
 
@@ -20,9 +23,9 @@ class LoginTracker {
     
     /**
      * Constructor creates a logIn event requires a database and username
-     * @param PDO $database 
-     * @param String $username
-     * @return Array An error of issues or an empty array if no issues found
+     * @param PDO $database A PDO object of the current Database
+     * @param String $username The username currently trying to log in
+     * @return void
      */
     public function __construct(PDO $database , $username)
     {
@@ -34,8 +37,6 @@ class LoginTracker {
         
         $this->checkLog();
         
-        return($this->message);
-        
     }
     
     /**
@@ -43,7 +44,7 @@ class LoginTracker {
      */
     private function setIP()
     {
-        //Convert IP address to Long for store.
+        //Convert IP address to Long for storage.
         //This can be reversed with long2ip or in MySQL with INET_NTOA
         $this->ip = ip2long($_SERVER['REMOTE_ADDR']);
     }
@@ -55,9 +56,9 @@ class LoginTracker {
     
     private function checkLog() {
         
-        $statement = "SELECT * FROM 'badLogin' WHERE 'username' = $this->username <> 'IPAddress' = $this->ip AND attemptTime >= NOW() - INTERVAL 30 MINUTES";
+        $statement = "SELECT * FROM `badLogins` WHERE ( `username` = '$this->username' OR `IPAddress` = '$this->ip'   ) AND `attemptTime` >= NOW() - INTERVAL 30 MINUTE";
         
-        $this->log = $this->database->query($statement)->fetchAll(PDO::FETCH_ASSOC);
+        $this->log = $this->database->query($statement)->fetchAll();
         
         foreach($this->log as $row){
             if($row['username'] == $this->username){
@@ -67,7 +68,7 @@ class LoginTracker {
                 $this->attemptsIp++;
             };
         };
-        
+
         if($this->attemptsIp > $this->maxAttempts){
             $this->message[] = 'Too Many IP';
         };
@@ -78,17 +79,16 @@ class LoginTracker {
         
     }
     
-    private function addLog() {
+    public function addLog() {
         
         try{
 
-            $statement = "INSERT INTO `tow`.`badLogins` (`IPAddress`, `attemptTime`, `username`)
-                          VALUES ( :IPAddress, NOW(), :username )";
+            $statement = "INSERT INTO badLogins (`IPAddress`, `username`)
+                          VALUES ( :IPAddress, :username )";
 
             $query = $this->database->prepare($statement);
             
-            $values = array(':username' => $this->username
-                          , ':IPAddress' => $this->ip );
+            $values = array( ':IPAddress' => $this->ip , ':username' => $this->username );
             
             $query->execute($values);
 
@@ -98,5 +98,13 @@ class LoginTracker {
         };
         
         return(TRUE);
+    }
+    
+    /**
+     * Returns the log of messages the LoginTracker has generated
+     * @return Array of messages
+     */
+    public function getMessage() {
+        return($this->message);
     }
 }
