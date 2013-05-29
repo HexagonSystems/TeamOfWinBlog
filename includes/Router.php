@@ -30,7 +30,7 @@ class Router
 			}
 			else if($page[1] == "loginPage"){
 				if(isset($page[2])){
-					if($page[2] == "login"){
+					if(isset($page[2])){
 						include_once("controller/LoginController.php");
 						$controller = new LoginController($conn);
 						$controller->invoke();
