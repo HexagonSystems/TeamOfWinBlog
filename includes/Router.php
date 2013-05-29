@@ -30,7 +30,7 @@ class Router
 			}
 			else if($page[1] == "loginPage"){
 				if(isset($page[2])){
-					if(isset($page[2])){
+					if($page[2] == "login"){
 						include_once("controller/LoginController.php");
 						$controller = new LoginController($conn);
 						$controller->invoke();
@@ -41,6 +41,21 @@ class Router
 					$controller = new LoginController($conn);
 					$controller->invoke();
 				}
+			}
+			else if($page[1] == "registerPage"){
+				include_once("controller/RegisterController.php");
+				$controller = new RegisterController($conn);
+				$controller->invoke();
+			}
+			else if($page[1] == "accountPage"){
+				include_once("controller/AccountController.php");
+				$controller = new AccountController($conn);
+				$controller->invoke();
+			}
+			else if($page[1] == "adminPage"){
+				include_once("controller/AdminController.php");
+				$controller = new AdminController($conn);
+				$controller->invoke();
 			}
 		}
 
