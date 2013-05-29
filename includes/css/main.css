@@ -1,12 +1,7 @@
 body{
 	background:#FAFCFC;
-	margin: auto;
-	padding:auto;
-	/*helps keeps the webpage centered*/
-	overflow-y: scroll;
-	overflow-x: hidden;
 }
 
-#container{
-	
+#content{
+	padding:20px;
 }
