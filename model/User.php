@@ -5,250 +5,231 @@ ini_set('display_errors', '1');
 
 class User
 {
-	private $database;
-	private $username;
-	private $password;
-	private $email;
-	private $firstLogin;
-	private $lastLogin;
-	private $accessLevel;
+    private $database;
+    private $username;
+    private $password;
+    private $email;
+    private $firstLogin;
+    private $lastLogin;
+    private $accessLevel;
 
-	/**
-	 * Constructor with extra quick create/login
-     * @param PDO $database sets the database connection
-     * @param Array $userArray Optional must contain a key of "new" or "login" needs "username", "password" [, "email", "accessLevel"]
+    /**
+     * Constructor with extra quick create/login
+     * @param  PDO    $database  sets the database connection
+     * @param  Array  $userArray Optional must contain a key of "new" or "login" needs "username", "password" [, "email", "accessLevel"]
      * @return Object or String returns this object
-	 */
-	public function __construct( PDO $database, $userArray = array('') )
-	{
+     */
+    public function __construct(PDO $database, $userArray = array(''))
+    {
 
-		$this->database = $database;
+        $this->database = $database;
 
-		if( isset($userArray["new"]) ){
+        if (isset($userArray["new"])) {
 
-			$this->createUser($userArray["username"], $userArray["password"], $userArray["email"], $userArray["accessLevel"]);
+            $this->createUser($userArray["username"], $userArray["password"], $userArray["email"], $userArray["accessLevel"]);
 
-			return($this);
+            return($this);
 
-		}elseif (isset($userArray["login"]) ) {
+        } elseif (isset($userArray["login"])) {
 
-			$this->loginUser($userArray["username"], $userArray["password"]);
+            $this->loginUser($userArray["username"], $userArray["password"]);
 
-			return($this);
-		}
+            return($this);
+        }
 
+    }
 
-	}
-
-
-	/**
-	 * Creates a new user
-	 *
+    /**
+     * Creates a new user
+     *
      * @param String $username
      * @param String $password
      * @param String $email
-     * @param Int $accessLevel
-	 */
-	public function createUser($username, $password, $email, $accessLevel)
-	{
-		if($this->checkUsername($username) == "Username not found"){
+     * @param Int    $accessLevel
+     */
+    public function createUser($username, $password, $email, $accessLevel)
+    {
+        if ($this->checkUsername($username) == "Username not found") {
 
-			$this->setUsername($username);
+            $this->setUsername($username);
 
-			if($this->checkEmail($email) == "Email not found"){
+            if ($this->checkEmail($email) == "Email not found") {
 
-				$this->setEmail($email);
+                $this->setEmail($email);
 
-			}else{
+            } else {
+                return($this->checkEmail($email));
 
-				return($this->checkEmail($email));
+            }
 
-			}
+            $this->setPassword($password);
 
-			$this->setPassword($password);
+            $this->setFirstLogin();
+            //$this->setLastLogin(time());
 
-			$this->setFirstLogin();
-			//$this->setLastLogin(time());
+            $this->setAccessLevel($accessLevel);
 
-			$this->setAccessLevel($accessLevel);
+            //If success return this object
+            return($this);
 
-			//If success return this object
-			return($this);
+        } else {
+            return($this->checkUsername($username));
+        }
 
-		}else{
+        return($this);
 
-			return($this->checkUsername($username));
-		}
-
-		return($this);
-
-	} //end createUser
+    } //end createUser
 
     /**
      * Tests if username exists in Database
      * Can be used to check the user has the right username or check the user isn't trying to
      * register a username that already exists
-     * @param String $username
+     * @param  String    $username
      * @return String
      * @throws Exception
      */
-	public function checkUsername($username)
-	{
+    public function checkUsername($username)
+    {
 
-		try{
-			$user = $this->database->query("select username from users where username = '$username'")->fetch();
+        try {
+            $user = $this->database->query("select username from users where username = '$username'")->fetch();
 
-		}catch(Exception $e){
-			throw new Exception( 'Database error:', 0, $e);
-			return;
-		};
+        } catch (Exception $e) {
+            throw new Exception('Database error:', 0, $e);
 
-		if($user !== false){
-			return("Username found");
-		}else{
-			return("Username not found");
-		}
+            return;
+        };
 
-	}// end checkUsername
+        if ($user !== false) {
+            return("Username found");
+        } else {
+            return("Username not found");
+        }
 
-	public function checkExists($data, $type)
-	{
+    }// end checkUsername
 
-		try{
-			$user = $this->database->query("select $type from users where $type = '$data'")->fetch();
+    /**
+     * Tests if email exists in Database
+     * Can be used to check the user has the right email or check the user isn't trying to
+     * register an email that already exists
+     * @param  String    $email
+     * @return String    either "Email found" or "Email not found"
+     * @throws Exception
+     */
+    public function checkEmail($email)
+    {
 
-		}catch(Exception $e){
-			throw new Exception( 'Database error:', 0, $e);
-			return;
-		};
+        try {
+            $user = $this->database->query("select * from users where email = '$email'")->fetch();
 
-		if($user !== false){
-			return("Data found");
-		}else{
-			return("Data not found");
-		}
+        } catch (Exception $e) {
+            throw new Exception('Database error:', 0, $e);
 
-	}// end checkUsername
+            return;
+        };
 
-	public function checkEmail($email)
-	{
+        if ($user !== false) {
+            return("Email found");
+        } else {
+            return("Email not found");
+        }
 
-		try{
-			$user = $this->database->query("select * from users where email = '$email'")->fetch();
+    }// end checkEmail
 
-		}catch(Exception $e){
-			throw new Exception( 'Database error:', 0, $e);
-			return;
-		};
-
-		if($user !== false){
-			return("Email found");
-		}else{
-			return("Email not found");
-		}
-
-	}// end checkEmail
-	 
     /**
      * Checks if a string matches the password. Does NOT set the Password
      * @todo Need to add an error check if password hasn't been set yet
-     * @param String $password
+     * @param  String  $password
      * @return boolean
-     */      
-	public function checkPassword($password)
-	{
-            
-            $password = sha1($password);
+     */
+    public function checkPassword($password)
+    {
+        $password = sha1($password);
 
-		if($this->getPassword() === $password){
-			return true;
-		}  else {
-			return false;
-		}
-	}// end checkPassword
+        if ($this->getPassword() === $password) {
+            return true;
+        } else {
+            return false;
+        }
+    }// end checkPassword
 
     /**
      * Wraps checking Username and Password together
      * @todo Set Up calls to create session for user if successful
-     * @param String $username
-     * @param String $password
+     * @param  String        $username
+     * @param  String        $password
      * @return String/Object
      * @throws Exception
      */
-	public function loginUser($username, $password)
-	{
-		if($this->checkUsername($username) == "Username not found"){
-			return("Username not found");
-		}
+    public function loginUser($username, $password)
+    {
+        if ($this->checkUsername($username) == "Username not found") {
+            return("Username not found");
+        }
 
-		//Collect User from the database
-		try{
+        //Collect User from the database
+        try {
             //returns multidemnsional array
             $user = $this->database->query("select * from users where username = '$username'")->fetch();
 
-		}catch(Exception $e){
-			throw new Exception( 'Database error:', 0, $e);
-			return;
-		};
+        } catch (Exception $e) {
+            throw new Exception('Database error:', 0, $e);
 
-		//map the single row to be the whole array
-		//$user = $user[0];
+            return;
+        };
 
-		//Set the password
+        //map the single row to be the whole array
+        //$user = $user[0];
+
+        //Set the password
         $this->setPassword($user["userPassword"], "old");
 
-		if(!$this->checkPassword($password)){
-			//Else errors
-			/*
-			 * Error handling:
-			*
-			* echo "Username: ".$username
-			."<br/>Entered Password: ".$password
-			."<br/>Actual Password: ".$this->getPassword()
-			."<br/>";*/
-			return("Password Incorrect");
-		};
-			
+        if (!$this->checkPassword($password)) {
+            //Else errors
+            return("Password Incorrect");
+        };
 
-		//echo "Login succussful!";
-		$this->setUsername($user["username"]);
+        $this->setUsername($user["username"]);
 
-		$this->setEmail($user["email"]);
+        $this->setEmail($user["email"]);
 
-		//$this->firstLogin = $firstLogin;
-		$this->setLastLogin();
+        //$this->firstLogin = $firstLogin;
+        $this->setLastLogin();
 
-		$this->setAccessLevel($user['ACL']);
+        $this->setAccessLevel($user['ACL']);
 
-		//If success return this object
-		return($this);
+        //If success return this object
+        return($this);
 
-	}//end loginUser
+    }//end loginUser
 
-	/**
-	 * Save user to database
-	 *
-	 * @todo Get this working correctly the current INSERT is in correct
-	 * @return string - Either error messages or saved
-	 */
-    public function save() {
-
-        try{
+    /**
+     * Save user to database
+     *
+     * @todo Get this working correctly the current INSERT is in correct
+     * @return string - Either error messages or saved
+     */
+    public function save()
+    {
+        try {
 
             $statement = "INSERT INTO `users` (`username`, `email`, `userPassword`, `ACL`)
-                               VALUES (:username, :email, :userPassword, :ACL)";
+                                       VALUES (:username, :email, :userPassword, :ACL)";
 
             $statement = $this->database->prepare($statement);
 
-            $statement->execute(array(':username' => $this->getUsername()
-                                    , ':email' => $this->getEmail()
-                                    , ':userPassword' => $this->getPassword()
-                                    , ':ACL' => $this->getAccessLevel()
-                                ));
+            $statement->execute(
+                array(':username' => $this->getUsername()
+                , ':email' => $this->getEmail()
+                , ':userPassword' => $this->getPassword()
+                , ':ACL' => $this->getAccessLevel()
+                )
+            );
 
-        }catch(Exception $e){
-                throw new Exception( 'Database error:', 0, $e);
-                return;
+        } catch (Exception $e) {
+            throw new Exception('Database error:', 0, $e);
+
+            return;
         };
 
         return("saved");
@@ -259,97 +240,101 @@ class User
      * @todo go private on this I don't think it should be a public method
      * @param String $username
      */
-	public function setUsername($username)
-	{
-		$this->username = $username;
-	}
-	public function getUsername()
-	{
-		return $this->username;
-	}
+    public function setUsername($username)
+    {
+          $this->username = $username;
+    }
+    public function getUsername()
+    {
+          return $this->username;
+    }
 
     /**
      * Sets the users email
      * @todo Add check for well formedness?
      * @param String $email
      */
-	public function setEmail($email)
-	{
-		$this->email = $email;
-	}
-	public function getEmail()
-	{
-		return $this->email;
-	}
+    public function setEmail($email)
+    {
+          $this->email = $email;
+    }
+    public function getEmail()
+    {
+          return $this->email;
+    }
 
     /**
      * Set Password, change the value of old when setting an already encrypted password
      * @param string $password
-     * @param string $old - If unset will encrypt the incoming password
+     * @param string $old      - If unset will encrypt the incoming password
      */
     public function setPassword($password, $old = 0)
-	{
-        if($old === 0)
-      $password = sha1($password);
-        
-		$this->password = $password;
-	}
-	public function getPassword()
-	{
-		return $this->password;
-	}
+    {
+        if ($old === 0) {
+            $password = sha1($password);
+        };
 
-	//First Login
-	public function setFirstLogin()
-	{
+        $this->password = $password;
+    }
+    public function getPassword()
+    {
+          return $this->password;
+    }
+
+    //First Login
+    public function setFirstLogin()
+    {
           $this->firstLogin = time();
-	}
-	public function getFirstLogin()
-	{
-		return $this->firstLogin;
-	}
+    }
+    public function getFirstLogin()
+    {
+          return $this->firstLogin;
+    }
 
-	//Last Login
-	public function setLastLogin()
-	{
-		$this->lastLogin = time();
-	}
-	public function getlastLogin()
-	{
-		return $this->lastLogin;
-	}
+    //Last Login
+    public function setLastLogin()
+    {
+          $this->lastLogin = time();
+    }
+    public function getlastLogin()
+    {
+          return $this->lastLogin;
+    }
 
     /**
      * Sets the access level for the user
      * @todo Add Sanity checks in here and return values
      * @param Int $accessLevel
      */
-	public function setAccessLevel($accessLevel)
-	{
-		$this->accessLevel = $accessLevel;
-	}
-	public function getAccessLevel()
-	{
-		return $this->accessLevel;
-	}
+    public function setAccessLevel($accessLevel)
+    {
+          $this->accessLevel = $accessLevel;
+    }
+    public function getAccessLevel()
+    {
+          return $this->accessLevel;
+    }
 
-	public function sessionCreate(){
-		if(!empty($this->username)){
-			$_SESSION['account'] = array('username'=>$this->getUsername(), 'access'=>$this->getAccessLevel());
-			$_SESSION['accountObject'] = serialize($this);
-		}
-	}
+    public function sessionCreate()
+    {
+        if (!empty($this->username)) {
+            $_SESSION['account'] = array('username'=>$this->getUsername(), 'access'=>$this->getAccessLevel());
+            $_SESSION['accountObject'] = serialize($this);
+        }
+    }
 
-	public function sessionDestroy(){
-		if(isset($_SESSION['account'])){
-			session_unset('account');
-		}
-		if(isset($_SESSION['accountObject'])){
-			session_unset('accountObject');
-		}
-	}
-        
-    public function __sleep() {
+    public function sessionDestroy()
+    {
+        if (isset($_SESSION['account'])) {
+            session_unset('account');
+        }
+        if (isset($_SESSION['accountObject'])) {
+            session_unset('accountObject');
+        }
+    }
+
+    public function __sleep()
+    {
         return array( 'username'
                     , 'password'
                     , 'email'
@@ -358,10 +343,10 @@ class User
                     , 'accessLevel'
                     );
     }
-    
-    public function setDatabase(PDO $database) {
+
+    public function setDatabase(PDO $database)
+    {
         $this->database = $database;
     }
-
-} //end class
-?>
+    //end Class
+}
