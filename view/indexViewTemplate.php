@@ -1,4 +1,4 @@
-<header>Welcome to the Team Of Win Blog website!</header>
+<header>Welcome to the Team Of Win Blog website! THIS IS THE FILE</header>
 
 <?php 
 if(isset($_SESSION['activeUser'])){

@@ -164,7 +164,7 @@ class User
 	public function checkPassword($password)
 	{
         $password = sha1($password);
-
+		echo 'In Pass:- "'.$password.'" Current Pass:- "'.$this->getPassword().'" ';
 		if($this->getPassword() === $password){
 			return true;
 		}  else {
@@ -199,14 +199,16 @@ class User
 
 		//map the single row to be the whole array
 		//$user = $user[0];
-
+		
 		//Set the password
-        $this->setPassword($user["userPassword"], "old");
+        $this->setPassword($user["password"], 1);
 
 		if(!$this->checkPassword($password)){
 			//Else errors
 			return("Password Incorrect");
-		};
+		}else{
+			echo "Correct";
+		}
 			
 		$this->setUsername($user["username"]);
 
@@ -229,26 +231,25 @@ class User
 	 * @todo Get this working correctly the current INSERT is in correct
 	 * @return string - Either error messages or saved
 	 */
-    public function save()
-    {
+public function Save() {
+
 		try{
 
-            $statement = "INSERT INTO `users` (`username`, `email`, `userPassword`, `ACL`)
-                                       VALUES (:username, :email, :userPassword, :ACL)";
+			$statement = "INSERT INTO `users` (`username`, `email`, `password`, `createDate`, `ACL`, `lastLoginDate`)
+					VALUES (:username, :email, :userPassword, :createDate, :ACL, :lastLoginDate)";
 
 			$statement = $this->database->prepare($statement);
 
-            $statement->execute(
-                array(':username' => $this->getUsername()
+			$statement->execute(array( ':username' => $this->getUsername()
 					, ':email' => $this->getEmail()
 					, ':userPassword' => $this->getPassword()
+					, ':createDate' => $this->getFirstLogin()
 					, ':ACL' => $this->getAccessLevel()
-                )
-            );
+					, ':lastLoginDate' => $this->getFirstLogin()
+			));
 
 		}catch(Exception $e){
 			throw new Exception( 'Database error:', 0, $e);
-
 			return;
 		};
 
