@@ -26,7 +26,7 @@ if(isset($_GET['data']))
 }
 
 function checkExists($data, $type, $user){
-	if($user->checkExists($data, $type) == "Data found")
+	if($user->checkUsername($data, $type) == "Username found")
 	{
 		return "This $type is taken";
 	}else

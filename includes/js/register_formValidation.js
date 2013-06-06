@@ -33,6 +33,9 @@ function formValidation(data, type) {
 				}
 			} else {
 				element_id.style.border = "3px solid #C4C4C4";
+				if (document.getElementById("message_" + type).style.visibility == "visible") {
+					hideMessageBox(type);
+				}
 			}
 		}
 	}

@@ -32,7 +32,7 @@
 			<!-- Password -->
 			<li><input type="password" placeholder="Password" name="pass"
 				id="register_pass" size=30 onfocus="openPasswordBox()"
-				onclick="openPasswordBox()" onkeyup="passValidation(this.value)")">
+				onclick="openPasswordBox()" onblur="hideMessageBox('pass')" onkeyup="passValidation(this.value)")">
 				<div id="message_pass" class="messageBox"
 					onclick="hideMessageBox('pass')">
 					<Header>Password Strength-O-Metre</Header>

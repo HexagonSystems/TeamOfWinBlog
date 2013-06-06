@@ -116,24 +116,6 @@ class User
      * @return String    either "Email found" or "Email not found"
      * @throws Exception
      */
-	public function checkExists($data, $type)
-	{
-
-		try{
-			$user = $this->database->query("select $type from users where $type = '$data'")->fetch();
-
-		}catch(Exception $e){
-			throw new Exception( 'Database error:', 0, $e);
-			return;
-		};
-
-		if($user !== false){
-			return("Data found");
-		}else{
-			return("Data not found");
-		}
-
-	}// end checkUsername
 
 	public function checkEmail($email)
 	{

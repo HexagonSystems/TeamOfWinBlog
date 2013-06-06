@@ -30,7 +30,7 @@ if(isset($_GET['data']))
 }
 
 function checkExists($data, $type, $user){
-	if($user->checkExists($data, $type) == "Data found")
+	if($user->checkEmail($data, $type) == "Email found")
 	{
 		return "This $type is taken";
 	}else
