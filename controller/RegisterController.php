@@ -5,81 +5,97 @@ class RegisterController
 {
 	private $model;
 	private $template;
-	private $header;
 	private $footer;
 	private $nav;
 	private $conn;
 
-	private $fileName = 'RegisterView';
+	private $loggedOutView = 'RegisterView';
+	private $loggedInView = 'loggedInView';
+
 	public function __construct(PDO $conn)
 	{
-		$this->header = 'includes/header.php';
 		$this->footer = 'includes/footer.php';
-		$this->nav = 'includes/nav.php';
+		include_once("controller/HeadController.php");
+		$this->nav = new HeadController();
+		$this->nav ->invoke();
 		$this->conn = $conn;
-		
+
 	} //end constructor
 	public function invoke()
 	{
 		if (!isset($_GET['action']))
 		{
-			$this->template = 'view/'.$this->fileName.'Template.php';
-			include_once('view/'.$this->fileName.'.php');
+			$this->template = 'view/'.$this->loggedOutView.'Template.php';
+			include_once('view/'.$this->loggedOutView.'.php');
 			//create a new view and pass it our template
-			$view = new RegisterView($this->template,$this->header,$this->footer,$this->nav);
+			$view = new RegisterView($this->template,$this->footer);
 			$content ="";
-			$view->assign('title' , 'Register');
+			$view->assign('title' , 'Loggged in');
 			$view->assign('content' , $content);
-			
 		}elseif (isset($_GET['action'])){
-			if($_GET['action'] == 'register')
+			if($_GET['action'] == 'Register')
 			{
 				$user = new User($this->conn);
-				if(isset($_POST['username']))
+				if(isset($_POST['username']) && isset($_POST['pass']))
 				{
-					if(isset($_POST['email']))
-					{
-						if(isset($_POST['pass']))
-						{
-							if(isset($_POST['pass2']))
-							{
-								//Check that password 1 and 2 match
-								if($_POST['pass'] === $_POST['pass2'])
-								{
-									//create the user
-									$user = $user->createUser($_POST["username"], $_POST["pass"], $_POST["email"], 2);	
-									//save the user
-									$user = $user->save();
-								}else
-								{
-									//if $_POST['pass'] isn't === $_POST['pass2'] 
-									echo "Passwords do not match";
-								}
-							}else
-							{
-								//if $_POST['pass2'] isn't set
-								echo "Password Again is not set";
-							}
-						}else
-						{
-							//if $_POST['pass'] isn't set
-							echo "Password is not set";
-						}
+					$user = $user->RegisterUser($_POST["username"], $_POST["pass"]);
+					if(!is_a($user, 'User')){
+						//NOt logged In
+						echo $user;
+						$this->template = 'view/'.$this->$loggedOutView.'Template.php';
+						include_once('view/'.$this->$loggedOutView.'.php');
+						//create a new view and pass it our template
+						$view = new RegisterView($this->template,$this->header,$this->footer,$this->nav);
+						$content ="";
+						$view->assign('title' , 'Loggged in');
+						$view->assign('content' , $content);
 					}else
 					{
-						//if $_POST['email'] isn't set
-						echo "Email is not set";
+						echo $user->getEmail();
 					}
 				}else
 				{
-					//if $_POST['username'] isn't set	
-					echo "Username is not set";
+					//if $_POSTs arn't set
+					//NOt logged In
+					echo "Post not set";
+					$this->template = 'view/'.$this->$loggedOutView.'Template.php';
+					include_once('view/'.$this->$loggedOutView.'.php');
+					//create a new view and pass it our template
+					$view = new RegisterView($this->template,$this->header,$this->footer,$this->nav);
+					$content ="";
+					$view->assign('title' , 'Loggged in');
+					$view->assign('content' , $content);
 				}
-				
+
+			}else if($_GET['action'] == 'register')
+			{
+				echo "attempting to register<br/>";
+				$user = new User($this->conn);
+				if(isset($_POST['username']) && isset($_POST['pass']) && isset($_POST['email']))
+				{
+					$user = $user->createUser($_POST["username"], $_POST["pass"], $_POST["email"], "1");
+					if(!is_a($user, 'User')){
+						//NOt logged In
+						echo $user;
+						$this->template = 'view/'.$this->$loggedOutView.'Template.php';
+						include_once('view/'.$this->$loggedOutView.'.php');
+						//create a new view and pass it our template
+						$view = new RegisterView($this->template,$this->header,$this->footer,$this->nav);
+						$content ="";
+						$view->assign('title' , 'Loggged in');
+						$view->assign('content' , $content);
+					}else
+					{
+						echo $user->save();
+						
+					}
+				}
+			}else{
+				echo "failed";
 			}
 		}
 		{
-			
+
 		}
 
 	} // end function
