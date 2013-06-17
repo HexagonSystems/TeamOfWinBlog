@@ -42,8 +42,8 @@ class LoginController
 					if(!is_a($user, 'User')){
 						//NOt logged In
 						echo $user;
-						$this->template = 'view/'.$this->$loggedOutView.'Template.php';
-						include_once('view/'.$this->$loggedOutView.'.php');
+						$this->template = 'view/'.$this->loggedOutView.'Template.php';
+						include_once('view/'.$this->loggedOutView.'.php');
 						//create a new view and pass it our template
 						$view = new LoginView($this->template,$this->header,$this->footer,$this->nav);
 						$content ="";
@@ -59,8 +59,8 @@ class LoginController
 					//if $_POSTs arn't set
 					//NOt logged In
 					echo "Post not set";
-					$this->template = 'view/'.$this->$loggedOutView.'Template.php';
-					include_once('view/'.$this->$loggedOutView.'.php');
+					$this->template = 'view/'.$this->loggedOutView.'Template.php';
+					include_once('view/'.$this->loggedOutView.'.php');
 					//create a new view and pass it our template
 					$view = new LoginView($this->template,$this->header,$this->footer,$this->nav);
 					$content ="";

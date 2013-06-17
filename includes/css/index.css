@@ -1,5 +1,14 @@
 @CHARSET "ISO-8859-1";
 
-#container header{
-	
+#content{
+	padding:20px;
+}
+
+#content header{
+	font-size:100px;
+}
+
+#content aside{
+	float:left;
+	background-color:B0B0B0
 }

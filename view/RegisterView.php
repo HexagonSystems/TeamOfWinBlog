@@ -26,7 +26,7 @@ class RegisterView
 			/**
 			 * trigger render to include file when this model is destroyed
 			 * if we render it now, we wouldn't be able to assign variables
-			 * to the view! 
+			 * to the view!
 			 */
 			$this->render = $template;
 		}
