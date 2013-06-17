@@ -5,7 +5,6 @@ class AdminController
 {
 	private $model;
 	private $template;
-	private $header;
 	private $footer;
 	private $nav;
 	private $conn;
@@ -13,9 +12,10 @@ class AdminController
 	private $fileName = 'AdminView';
 	public function __construct(PDO $conn)
 	{
-		$this->header = 'includes/header.php';
 		$this->footer = 'includes/footer.php';
-		$this->nav = 'includes/nav.php';
+		include_once("controller/HeadController.php");
+		$this->nav = new HeadController();
+		$this->nav ->invoke();
 		$this->conn = $conn;
 		
 	} //end constructor
@@ -26,7 +26,7 @@ class AdminController
 			$this->template = 'view/'.$this->fileName.'Template.php';
 			include_once('view/'.$this->fileName.'.php');
 			//create a new view and pass it our template
-			$view = new AdminView($this->template,$this->header,$this->footer,$this->nav);
+			$view = new AdminView($this->template,$this->footer);
 			$content ="";
 			//$view->assign('title' , 'Loggged in');
 			//$view->assign('content' , $content);

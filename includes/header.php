@@ -11,13 +11,4 @@
 <body>
 	<div class="container">
 		<header id="header">
-			<nav>
-				<ul>
-					<li><a href="index.php?location=indexPage">HOME</a></li>
-					<li><a href="index.php?location=indexPage">BLOGS</a></li>
-					<li><a href="index.php?location=loginPage">LOG IN</a></li>
-					<li><a href="index.php?location=registerPage">REGISTER</a></li>
-					<li><a href="index.php?location=indexPage">NEW POST</a></li>
-				</ul>
-			</nav>
-			<header>TOW Blog Website 02</header>
+			<h1>TOW Blog Website 02</h1>

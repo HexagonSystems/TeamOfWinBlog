@@ -2,7 +2,7 @@
 /**
  * Handles the view functionality of our MVC framework
  */
-class AccountView
+class HeadView
 {
 	/**
 	 * Holds variables assigned to template
@@ -12,11 +12,12 @@ class AccountView
 	 * Holds render status of view.
 	*/
 	private $render = FALSE;
-	private $footer = FALSE;
+	private $header = FALSE;
+	private $nav = FALSE;
 	/**
 	 * Accept a template to load
 	 */
-	public function __construct($template,$footer)
+	public function __construct($template,$header,$nav)
 	{
 		// echo "In Consttructor" ;
 		if (file_exists($template))
@@ -24,18 +25,27 @@ class AccountView
 			/**
 			 * trigger render to include file when this model is destroyed
 			 * if we render it now, we wouldn't be able to assign variables
-			 * to the view! 
+			 * to the view!
 			 */
 			$this->render = $template;
 		}
-		if (file_exists($footer))
+		if (file_exists($header))
 		{
 			/**
 			 * trigger render to include file when this model is destroyed
 			 * if we render it now, we wouldn't be able to assign variables
 			 * to the view!
 			 */
-			$this->footer = $footer;
+			$this->header = $header;
+		}
+		if (file_exists($nav))
+		{
+			/**
+			 * trigger render to include file when this model is destroyed
+			 * if we render it now, we wouldn't be able to assign variables
+			 * to the view!
+			 */
+			$this->nav = $nav;
 		}
 	}
 	/*** Receives assignments from controller and stores in local data array
@@ -53,7 +63,7 @@ class AccountView
 		$data = $this->data;
 		//echo "In Destructor" ;
 		//render view
-		include_once($this->render);
-		include_once($this->footer);
+		include_once($this->header);
+		include_once($this->nav);
 	}
 } //end class
