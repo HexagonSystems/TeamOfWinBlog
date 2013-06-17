@@ -11,6 +11,7 @@
 <body>
 	<div class="container">
 		<header id="header">
+<<<<<<< HEAD
 			<nav>
 				<ul>
 					<li><a href="index.php?location=indexPage">HOME</a></li>
@@ -20,4 +21,6 @@
 					<li><a href="index.php?location=indexPage">NEW POST</a></li>
 				</ul>
 			</nav>
+=======
+>>>>>>> headConTroLler
 			<header>TOW Blog Website 02</header>
