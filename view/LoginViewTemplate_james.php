@@ -1,9 +1,3 @@
-<link rel="stylesheet" type="text/css" href="includes/css/loginView.css" />
-<link rel="stylesheet"
-	type="text/css" href="includes/css/index_blog_display.css" />
-<script
-	src="includes/js/register_formValidation.js"></script>
-
 <aside>
 	<article>
 		<span class="title">Create your account</span>

@@ -1,11 +1,3 @@
-<link rel="stylesheet" type="text/css" href="includes/css/loginView.css" />
-<link rel="stylesheet"
-	type="text/css" href="includes/css/index_blog_display.css" />
-<script
-	src="includes/js/register_formValidation.js"></script>
-<script
-	src="includes/js/register_passValidation.js"></script>
-
 <article id="loginBox" e>
 	<span class="title">Login</span>
 	<form action="index.php?location=loginPage&action=login" method="POST">
