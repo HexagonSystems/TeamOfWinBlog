@@ -1,1 +1,5 @@
 /designFiles/
+.project
+.settings/
+config/config.php
+index.php

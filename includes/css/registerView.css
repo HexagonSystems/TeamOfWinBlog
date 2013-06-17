@@ -8,7 +8,7 @@
 	width: 100%;
 }
 
-#content article{
+#content #registerBox{
 	position:relative;
 	margin:auto;
 	margin-top:3%;
@@ -17,14 +17,14 @@
 	max-width:1000px;
 	text-align:center;
 }
-#content #loginBox .title {
+#content #registerBox .title {
 	font-size: 30px;
 	text-align: center;
 	color: #6699B6;
 	font-weight: bold;
 }
 
-#content #loginBox ul {
+#content #registerBox ul {
 	border-top: 2px solid #6699B6;
 	padding: 10px;
 	overflow: visible;
@@ -32,18 +32,18 @@
 	padding: auto;
 }
 
-#content #loginBox ul:first-child {
+#content #registerBox ul:first-child {
 	border-bottom: 2px solid #C4C4C4;
 }
 
-#content #loginBox li {
+#content #registerBox li {
 	list-style: none;
 	padding: 5px;
 	overflow: visible;
 	display: block;
 }
 
-#content #loginBox input {
+#content #registerBox input {
 	height: 25px;
 	width: 90%;
 	font-size: 20px;
@@ -51,7 +51,7 @@
 	border: 3px solid #C4C4C4;
 }
 
-#content #loginBox input[type='submit'] {
+#content #registerBox input[type='submit'] {
 	height: 45px;
 	width: 95%;
 	min-width: auto;
@@ -62,7 +62,7 @@
 	border: 0px;
 }
 
-#content #loginBox button {
+#content #registerBox button {
 	width: 95%;
 	display: block;
 	min-width: auto;
@@ -74,12 +74,12 @@
 	margin-top: 20px;
 }
 
-#content #loginBox input[type='submit']:hover {
+#content #registerBox input[type='submit']:hover {
 	background-color: #D46B16;
 	cursor:pointer;
 }
 
-#content #loginBox button:hover {
+#content #registerBox button:hover {
 	background-color: #D46B16;
 }
 
