@@ -175,6 +175,8 @@ class User
 
         if (!$this->checkPassword($password)) {
             //Else errors
+            new LoginTracker($this->database, $this->getUsername());
+            
             return("Password Incorrect");
         } else {
             echo "Correct";
