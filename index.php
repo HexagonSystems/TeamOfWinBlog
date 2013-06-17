@@ -6,7 +6,7 @@ ini_set('display_errors', '1');
 /**
  * CHANGE THIS TO A CONFIG THAT IS YOU!
  */
-require_once('config/config_steve.php');
+require_once('config/config.php');
 include_once("includes/Router.php");
 Router::route($conn);
 

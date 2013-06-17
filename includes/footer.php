@@ -3,11 +3,11 @@
 
 <!-- Footer -->
 <footer id="footer">
-	<p class="copyright">
+	<article class="copyright">
 		&copy;
-		<?php echo "Team Of Win" ?>
+		Team Of Win
 		2013
-	</p>
+	</article>
 </footer>
 </div>
 <!-- end page -->

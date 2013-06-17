@@ -1,10 +1,16 @@
 xmlhttp;
 
+/**
+ * formValidation
+ * 
+ * @param data
+ * @param type
+ */
 function formValidation(data, type) {
 	xmlhttp = createStuff();
 
-	xmlhttp.open("GET", "includes/php/register_formValidation.php?data=" + data
-			+ "&type=" + type, true);
+	xmlhttp.open("GET", "includes/php/register_" + type
+			+ "Validation.php?data=" + data + "&type=" + type, true);
 
 	xmlhttp.onreadystatechange = process;
 
@@ -33,6 +39,21 @@ function formValidation(data, type) {
 
 }
 
+function checkEmpty(element_id) {
+	element_id = document.getElementById(element_id);
+	if (empty(element_id.value)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+/*
+ * function submitForm() { values = array('username', 'email', 'pass');
+ * 
+ * foreach(values as id){ element_id = document.getElementById(id);
+ * if(checkEmpty("register_" + id)) { createMessageBox(id, "Please enter in your " +
+ * id); }else { } } }
+ */
 function createStuff() {
 	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
 		return new XMLHttpRequest();
@@ -41,42 +62,28 @@ function createStuff() {
 	}
 }
 
+function usernameValidation(username) {
+	if (/\s/g.test(username)) {
+		createMessageBox('username',
+				"Please remove any white space from your username");
+	} else {
+		formValidation(username, 'username');
+	}
+
+}
+
 function createMessageBox(type, message) {
 	var inputBox = document.getElementById("register_" + type);
 	inputBox.style.border = "3px solid #FA4B3E";
 
 	var messageBox = document.getElementById("message_" + type);
-	messageBox.style.display = "table";
-	messageBox.style.position = "absolute";
-	messageBox.style.marginTop = "-45px";
-	messageBox.style.minWidth = "200px";
-	messageBox.style.zIndex = "3";
-	messageBox.style.border = "1px solid black";
-	messageBox.style.background = "#FFFFFF";
-	messageBox.style.left = "80%";
-	messageBox.style.borderRadius = "5px";
-	messageBox.style.padding = "10px";
-	messageBox.style.textSize = "20px";
-	messageBox.style.boxShadow = "10px 5px 10px #888";
-	messageBox.style.visibility = "visible";
+
 	messageBox.innerHTML = message;
+	messageBox.style.visibility = "visible";
+
 }
 
 function hideMessageBox(type) {
 	var messageBox = document.getElementById("message_" + type);
 	messageBox.style.visibility = "hidden";
-}
-
-function validatePass(data) {
-	if (data.length > 0) {
-		if (data.length > 6) {
-			document.getElementById("register_pass").style.border = "3px solid green";
-			if (document.getElementById("message_pass").style.visibility == "visible") {
-				hideMessageBox(type);
-			}
-		} else {
-			createMessageBox('pass',
-					"Password needs to be longer than 6 characters");
-		}
-	}
 }

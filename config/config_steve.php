@@ -10,8 +10,8 @@ define('SITE_ROOT' , 'tow.dev:8888');
 
 $host = "localhost";
 $db = "tow";
-$user = "towuser";
-$pass = "towpassword";
+$user = "root";
+$pass = "";
 $conn = new PDO("mysql:host=$host;dbname=$db",$user,$pass);
 /**
  * Define any other config option you may want to use

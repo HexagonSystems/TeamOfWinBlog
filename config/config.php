@@ -2,14 +2,14 @@
 /**
  * Define document paths
  */
-define('SERVER_ROOT' , 'I:\xampp\htdocs\workspace\TeamOfWinBlog');
-define('SITE_ROOT' , 'http://localhost/workspace/TeamOfWinBlog');
+define('SERVER_ROOT' , $_SERVER["DOCUMENT_ROOT"]);
+define('SITE_ROOT' , 'tow.dev:8888');
 /**
  * Define database connection if using a database
 */
 
 $host = "localhost";
-$db = "pdoexercise";
+$db = "tow";
 $user = "root";
 $pass = "";
 $conn = new PDO("mysql:host=$host;dbname=$db",$user,$pass);

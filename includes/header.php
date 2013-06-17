@@ -12,4 +12,3 @@
 	<div class="container">
 		<header id="header">
 			<header>TOW Blog Website 02</header>
-		
