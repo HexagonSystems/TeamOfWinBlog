@@ -11,4 +11,4 @@
 <body>
 	<div class="container">
 		<header id="header">
-			<h1>TOW Blog Website 02</h1>
+			<header>TOW Blog Website 02</header>
