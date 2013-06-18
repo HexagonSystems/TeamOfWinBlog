@@ -7,28 +7,25 @@ $user = new User($conn);
 
 if(isset($_GET['data']))
 {
-	if(isset($_GET['type'])){
 		$data = $_GET['data'];
-		$type = $_GET['type'];
 		if(!empty($data)){
-			if (checkExists($data, $type, $user) == "true")
+			if (checkExists($data, $user) == "true")
 			{
 				echo "true";
 			}else
 			{
-				echo "This $type is already in use";
+				echo "This username is already in use";
 			}
 		}else
 		{
 			echo "null";
 		}
-	}
 }
 
-function checkExists($data, $type, $user){
-	if($user->checkUsername($data, $type) == "Username found")
+function checkExists($data, $user){
+	if($user->checkUsername($data) == "Username found")
 	{
-		return "This $type is taken";
+		return "This username is taken";
 	}else
 	{
 		return "true";

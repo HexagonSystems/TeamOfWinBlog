@@ -14,10 +14,15 @@ class Post
      *
      * @param PDO $database Needs a PDO database connection
      */
-    public function __construct(PDO $database)
+    public function __construct()
     {
-        $this->database = $database;
+        
     }//end construct
+    
+    public function setDatabase(PDO $database)
+    {
+    	$this->database = $database;
+    }
 
     /**
      * Loads an existing post from the database
@@ -244,4 +249,50 @@ class Post
     {
         return($this->post['username']);
     }
+    
+    public function getPosts($startPost, $endPost)
+    {
+    	try
+    	{
+    	$statement = "SELECT postId, title, status, content, date, username
+	    			FROM`posts`
+	    			WHERE`status`='published'
+	    			LIMIT :startPost, :endPost";
+    	
+    	$query = $this->database->prepare($statement);
+    	
+    	$query->bindParam(':startPost'   , $startPost , PDO::PARAM_INT);
+    	$query->bindParam(':endPost'  	 , $endPost   , PDO::PARAM_INT);
+    	
+    	$query->execute();
+    	
+    	$arrayOfPosts = array();
+    	 
+    	foreach($query as $row){
+    		$tempObject = new Post();
+    	
+    		$tempObject->setPostid($row['postId']);
+    		$tempObject->setTitle($row['title']);
+    		$tempObject->setStatus($row['status']);
+    		$tempObject->setContent($row['content']);
+    		$tempObject->setDate($row['date']);
+    		$tempObject->setUsername($row['username']);
+    	
+    		$arrayOfPosts[$tempObject->getPostid()] = $tempObject;
+    	
+    	}
+    	
+    	//print_r($arrayOfPosts);
+    	 
+    	return $arrayOfPosts;
+    	}
+    	catch(PDOException $e)
+    	{
+    		echo $e;
+    		return false;	
+    	}
+    	
+    	
+    }
+    
 }//end post class

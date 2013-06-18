@@ -7,17 +7,15 @@ $user = new User($conn);
 
 if(isset($_GET['data']))
 {
-	if(isset($_GET['type'])){
 		$data = $_GET['data'];
-		$type = $_GET['type'];
 		if(!empty($data)){
 			if(checkEmailValid($data)){
-				if (checkExists($data, $type, $user) == "true")
+				if (checkExists($data, $user) == "true")
 				{
 					echo "true";
 				}else
 				{
-					echo "This $type is already in use";
+					echo "This email is already in use";
 				}
 			}else{
 				echo "Please enter in a valid email";
@@ -26,13 +24,12 @@ if(isset($_GET['data']))
 		{
 			echo "null";
 		}
-	}
 }
 
-function checkExists($data, $type, $user){
-	if($user->checkEmail($data, $type) == "Email found")
+function checkExists($data, $user){
+	if($user->checkEmail($data) == "Email found")
 	{
-		return "This $type is taken";
+		return "This email is taken";
 	}else
 	{
 		return "true";

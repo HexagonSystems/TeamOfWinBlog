@@ -1,4 +1,13 @@
-xmlhttp;
+var xmlhttp;
+
+var head_input = "register_";
+var head_message = "message_";
+
+var validChecker = {
+		"username"	: null,
+		"email"		: null,
+		"password"	: null
+	};
 
 /**
  * formValidation
@@ -6,11 +15,15 @@ xmlhttp;
  * @param data
  * @param type
  */
-function formValidation(data, type) {
+function formValidation(field_value, field_name) {
+	
+	var field_input = getInputBox(field_name);
+	var field_message = getMessageBox(field_name);
+	
 	xmlhttp = createStuff();
 
-	xmlhttp.open("GET", "includes/php/register_" + type
-			+ "Validation.php?data=" + data + "&type=" + type, true);
+	xmlhttp.open("GET", "includes/php/register_" + field_name
+			+ "Validation.php?data=" + field_value, true);
 
 	xmlhttp.onreadystatechange = process;
 
@@ -20,26 +33,77 @@ function formValidation(data, type) {
 
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			response = xmlhttp.responseText;
-			element_id = document.getElementById("register_" + type);
+			field_input = document.getElementById(field_input);
 			if (response !== "null") {
 				if (response === "true") {
-					element_id.style.border = "3px solid green";
-					if (document.getElementById("message_" + type).style.visibility == "visible") {
-						hideMessageBox(type);
+					field_input.style.border = "3px solid green";
+					validChecker[field_name] = true;
+					if (messageBoxActive(field_message)) {
+						hideMessageBox(field_message);
 					}
 				} else {
-					// $element_id.style.border = "3px solid red";
-					createMessageBox(type, response);
+					createMessageBox(field_name, response);
 				}
 			} else {
-				element_id.style.border = "3px solid #C4C4C4";
-				if (document.getElementById("message_" + type).style.visibility == "visible") {
-					hideMessageBox(type);
+				displayInputReset(field_name);
+				if (messageBoxActive(field_message)) {
+					hideMessageBox(field_message);
 				}
 			}
 		}
 	}
 
+}
+
+function validateEntry(field_input){
+	var field_name = getNameFromInput(field_input.id);
+	var field_has_data = false;
+	if(field_name == "pass"){
+		field_has_data = true;
+	}else{
+		field_has_data = fieldHasData(field_name);
+	}
+	
+	if(field_has_data){
+		switch(field_name){
+		case "username":	validate_username();
+							break;
+		case "email":		validate_email();
+							break;		
+		case "pass":		validate_pass();
+							break;	
+		}
+		
+	}
+	
+	var submitBox = document.getElementById("submitBox");
+	if(validChecker["username"] && validChecker["email"] && validChecker["pass"]){
+		submitBox.innerHTML = '<input type="submit" value="Sign me up!">';
+	}else{
+		submitBox.innerHTML = "Do everything right!</br>";
+		for(var value in validChecker){
+			submitBox.innerHTML += "<br/>" + validChecker[value];
+		}
+	}
+}
+
+function fieldHasData(field_name) {
+
+	var field_input = getInputBox(field_name);
+	var field_value = getInputValue(field_input);
+
+	if (field_value.length > 0) {
+		return true;
+	} else {
+		var field_message = getMessageBox(field_name);
+		displayInputReset(field_name);
+		return false;
+	}
+}
+		
+function getNameFromInput(field_input){
+	var splitString = field_input.split("_");
+	return splitString[1];
 }
 
 function checkEmpty(element_id) {
@@ -65,6 +129,77 @@ function createStuff() {
 	}
 }
 
+/*
+ * GET FUNCTIONS
+ */
+function getInputBox(field_name) {
+	return head_input + field_name;
+}
+
+function getMessageBox(field_name) {
+	return head_message + field_name;
+}
+
+function getInputValue(field_input) {
+	if(document.getElementById(field_input).value != null){
+		return document.getElementById(field_input).value;
+	}else{
+		return "";
+	}
+}
+
+function displayInputReset(field_name) {
+	
+	validChecker[field_name] = null;
+	
+	var field_input = getInputBox(field_name);
+	var field_message = getMessageBox(field_name);
+
+	fieldToReset = document.getElementById(field_input);
+	fieldToReset.style.border = "3px solid #C4C4C4";
+
+	if (messageBoxActive(field_message)) {
+		hideMessageBox(field_message);
+	}
+}
+
+function messageBoxActive(messageBox) {
+	messageBox = document.getElementById(messageBox);
+	if (messageBox.style.visibility == "visible") {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function validate_username() {
+	
+	var field_name = "username";
+	var field_input = getInputBox(field_name);
+	var field_message = getMessageBox(field_name);
+	var field_value = getInputValue(field_input);
+	
+	if (/\s/g.test(field_value)) {
+		createMessageBox(field_name, "Please remove any white space from your username");
+	} else {
+		formValidation(field_value, field_name);
+	}
+}
+
+function validate_email() {
+	
+	var field_name = "email";
+	var field_input = getInputBox(field_name);
+	var field_message = getMessageBox(field_name);
+	var field_value = getInputValue(field_input);
+	
+	if (/\s/g.test(field_value)) {
+		createMessageBox(field_name, "Please remove any white space from your username");
+	} else {
+		formValidation(field_value, field_name);
+	}
+}
+
 function usernameValidation(username) {
 	if (/\s/g.test(username)) {
 		createMessageBox('username',
@@ -72,21 +207,45 @@ function usernameValidation(username) {
 	} else {
 		formValidation(username, 'username');
 	}
-
 }
 
-function createMessageBox(type, message) {
-	var inputBox = document.getElementById("register_" + type);
+/**
+ * Create Message Box Changes the border color of the input box to a red-toned
+ * color. Inputs errorMessage retrieved through previous AJAX command into the
+ * id of the current message box. Makes the current message box visible to the
+ * user
+ * 
+ * @param inputBox
+ *            Id of current inputBox that caused the error
+ * @param messageBox
+ *            Id of messageBox for the message to be displayed in
+ * @param errorMessage
+ *            Message to be displayed to the user
+ */
+function createMessageBox(field_name, errorMessage) {
+	
+	validChecker[field_name] = false;
+	
+	var field_input = getInputBox(field_name);
+	var field_message = getMessageBox(field_name);
+
+	var messageBox = document.getElementById(field_message);
+	var inputBox = document.getElementById(field_input);
+
 	inputBox.style.border = "3px solid #FA4B3E";
 
-	var messageBox = document.getElementById("message_" + type);
-
-	messageBox.innerHTML = message;
+	messageBox.innerHTML = errorMessage;
 	messageBox.style.visibility = "visible";
-
 }
 
-function hideMessageBox(type) {
-	var messageBox = document.getElementById("message_" + type);
+/**
+ * Hide Message Box Takes the id of a message box div as the parameter. Change
+ * the visibility of the message box to hidden.
+ * 
+ * @param messageBox
+ *            Id of the message box div currently in use
+ */
+function hideMessageBox(field_message) {
+	var messageBox = document.getElementById(field_message);
 	messageBox.style.visibility = "hidden";
 }

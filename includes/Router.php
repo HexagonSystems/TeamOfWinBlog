@@ -14,6 +14,7 @@ class Router
             case "indexPage":
                 include_once 'controller/IndexController.php';
 				$controller = new IndexController();
+				$controller->setDatabase($conn);
 				$controller->invoke();
                 break;
             case "loginPage":

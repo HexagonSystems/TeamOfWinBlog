@@ -15,10 +15,11 @@ class IndexView
 	private $header = FALSE;
 	private $footer = FALSE;
 	private $nav = FALSE;
+	private $currentPagePosts = FALSE;
 	/**
 	 * Accept a template to load
 	 */
-	public function __construct($template,$header,$footer,$nav)
+	public function __construct($template,$header,$footer,$nav,$currentPagePosts)
 	{
 		// echo "In Consttructor" ;
 		if (file_exists($template))
@@ -57,6 +58,9 @@ class IndexView
 			 */
 			$this->nav = $nav;
 		}
+		if ($currentPagePosts){
+			$this->currentPagePosts = $currentPagePosts;
+		}
 	}
 	/*** Receives assignments from controller and stores in local data array
 	 *
@@ -67,6 +71,17 @@ class IndexView
 	{
 		$this->data[$variable] = $value;
 	}
+	private function printCurrentPagePosts()
+	{
+		foreach($this->currentPagePosts as $currentPost)
+		{
+			$postTitle = $currentPost->getTitle();
+			$postContent = $currentPost->getContent();
+			$postDate = $currentPost->getDate();
+			
+			include 'view/postPreviewTemplate.php';
+		}
+	}
 	public function __destruct()
 	{
 		//parse data variables into local variables, so that they render to the view
@@ -76,11 +91,16 @@ class IndexView
 		include_once($this->header);
 		include_once($this->nav);
 		try{
-		include_once($this->render);
+			include_once($this->render);
 		}
 		catch(Exception $e){
-			
+
+		}
+		if($this->currentPagePosts){
+			$this->printCurrentPagePosts();
 		}
 		include_once($this->footer);
+		
+		
 	}
 } //end class

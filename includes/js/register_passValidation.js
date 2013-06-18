@@ -51,11 +51,29 @@ var countSpecial = 0;
 var countLength = 0;
 var correctLength;
 
-var pass;
+var validPassword = {
+	"length" : 0,
+	"upper" : 0,
+	"lower" : 0,
+	"number" : 0,
+	"special" : 0,
+	"length_count" : 0,
+	"length_correct" : null
+};
 
-function passValidation(pass) {
+var field_name;
+;
+var field_input;
+var field_message;
+var field_value;
 
-	pass = pass;
+function validate_pass() {
+
+	field_name = "pass";
+	field_input = getInputBox(field_name);
+	field_message = getMessageBox(field_name);
+	field_value = getInputValue(field_input);
+	;
 
 	correctLength = checkCorrectLength();
 
@@ -64,7 +82,7 @@ function passValidation(pass) {
 	var points = 0;
 
 	// count length
-	countLength = pass.length;
+	countLength = field_value.length;
 
 	// check upper and lowercase counts
 	countCase();
@@ -113,11 +131,11 @@ function passValidation(pass) {
 	}
 
 	function countCase() {
-		for ( var passChar = 0; passChar < pass.length; passChar++) {
+		for ( var passChar = 0; passChar < field_value.length; passChar++) {
 			// if(pass[passChar] == pass[passChar].toUpperCase()){
-			if (pass[passChar].match(/^([A-Z])$/)) {
+			if (field_value[passChar].match(/^([A-Z])$/)) {
 				countUpper++;
-			} else if (pass[passChar].match(/^([a-z])$/)) {
+			} else if (field_value[passChar].match(/^([a-z])$/)) {
 				countLower++;
 			}
 		}
@@ -125,9 +143,9 @@ function passValidation(pass) {
 
 	function countNumbers() {
 		var tempCount = 0;
-		for ( var passChar = 0; passChar < pass.length; passChar++) {
+		for ( var passChar = 0; passChar < field_value.length; passChar++) {
 			// if(pass[passChar] == pass[passChar].toUpperCase()){
-			if (pass[passChar].match(/^([0-9])$/)) {
+			if (field_value[passChar].match(/^([0-9])$/)) {
 				tempCount++;
 			}
 		}
@@ -137,9 +155,9 @@ function passValidation(pass) {
 
 	function countSpecial() {
 		var tempCount = 0;
-		for ( var passChar = 0; passChar < pass.length; passChar++) {
+		for ( var passChar = 0; passChar < field_value.length; passChar++) {
 			// if(pass[passChar] == pass[passChar].toUpperCase()){
-			if (pass[passChar].match(/^([!@#$%^&*?_~])$/)) {
+			if (field_value[passChar].match(/^([!@#$%^&*?_~])$/)) {
 				tempCount++;
 			}
 		}
@@ -158,11 +176,11 @@ function passValidation(pass) {
 		var recCount = 0;
 		var checkRecHasHappened;
 
-		for ( var checkRec = 0; checkRec < pass.length; checkRec++) {
+		for ( var checkRec = 0; checkRec < field_value.length; checkRec++) {
 			// count if this is the first time the loop is running
 			if (checkRec > 0) {
 				// count if the character is the same as the previous one
-				if (pass[checkRec - 1] == pass[checkRec]) {
+				if (field_value[checkRec - 1] == field_value[checkRec]) {
 					// Add one to countRec
 					recCount++;
 				} else {
@@ -182,10 +200,10 @@ function passValidation(pass) {
 	function countPassContains(countExists) {
 		var currentPoints = 0;
 		// loop through password
-		for ( var i = 0; i < pass.length; i++) {
+		for ( var i = 0; i < field_value.length; i++) {
 			// loop through vali_ (special characters and numbers)
 			for ( var x = 0; x < countExists.length; x++) {
-				if (pass[i] == countExists[x]) {
+				if (field_value[i] == countExists[x]) {
 					currentPoints++;
 				}
 			}
@@ -194,8 +212,8 @@ function passValidation(pass) {
 	}
 
 	function checkCorrectLength() {
-		if (pass.length >= 8) {
-			if (pass.length <= 20) {
+		if (field_value.length >= 8) {
+			if (field_value.length <= 20) {
 				return true;
 			} else {
 				return false;
@@ -206,9 +224,10 @@ function passValidation(pass) {
 	}
 
 	function updatePasswordBox() {
-		var passwordStrengthBar = document.getElementById("passwordStrengthBar");
+		var passwordStrengthBar = document
+				.getElementById("passwordStrengthBar");
 		var psb = passwordStrengthBar.getElementsByTagName('span')[0];
-		
+
 		var psbColorCode = Array();
 		psbColorCode['0'] = "#A30000";
 		psbColorCode['80'] = "#FF3300";
@@ -216,26 +235,26 @@ function passValidation(pass) {
 		psbColorCode['190'] = "#00CC00";
 		psbColorCode['210'] = "#00A300";
 
-		if(points < 80){
+		if (points < 80) {
 			psb.style.backgroundColor = psbColorCode['0'];
+			validChecker['pass'] = false;
+		} else {
+			validChecker['pass'] = true;
+			if (points >= 80 && points < 190) {
+				if (points < 120) {
+					psb.style.backgroundColor = psbColorCode['80'];
+				} else if (points >= 120) {
+					psb.style.backgroundColor = psbColorCode['120'];
+				}
+			} else if (points >= 190) {
+				if (points < 210) {
+					psb.style.backgroundColor = psbColorCode['190'];
+				} else if (points >= 210) {
+					psb.style.backgroundColor = psbColorCode['210'];
+				}
+			}
 		}
-		else if(points >= 80 && points < 190){
-			if(points < 120){
-				psb.style.backgroundColor = psbColorCode['80'];
-			}
-			else if(points >= 120){
-				psb.style.backgroundColor = psbColorCode['120'];
-			}
-		}
-		else if(points >= 190){
-			if(points < 210){
-				psb.style.backgroundColor = psbColorCode['190'];
-			}
-			else if(points >= 210){
-				psb.style.backgroundColor = psbColorCode['210'];
-			}
-		}
-		
+
 		/*
 		 * if (points < 80) { passwordNotValid("Your password is too weak");
 		 * psb.style.backgroundColor = "#A30000"; } else if (points >= 80 &&
@@ -255,28 +274,32 @@ function passValidation(pass) {
 			points = points / 240 * 100;
 		}
 		// alert(points);
-		
+
 		psb.style.width = points + "%";
 	}
-	function passwordNotValid(message) {
-		var inputBox = document.getElementById("register_pass");
-		inputBox.style.border = "3px solid #FA4B3E";
 
-		var messageBox = document.getElementById("message_pass");
-		messageBox.style.visibility = "visible";
+	function passwordNotValid(message) {
+		field_inputx.style.border = "3px solid #FA4B3E";
+
+		fields_messagex.style.visibility = "visible";
 		var messageBoxArea = messageBox.getElementsByTagName('p')[0];
 		messageBoxArea.innerHTML = points;
 	}
+
 	function displayPassOk() {
-		document.getElementById("register_pass").style.border = "3px solid green";
-		if (document.getElementById("message_pass").style.visibility == "visible") {
-			hideMessageBox("pass");
+		field_input.style.border = "3px solid green";
+		if (field_message.style.visibility == "visible") {
+			hideMessageBox("message_pass");
 		}
+
+	}
+
+	function openPasswordBox() {
+		field_message.style.visibility = "visible";
 	}
 
 }
 
 function openPasswordBox() {
-	var messageBox = document.getElementById("message_pass");
-	messageBox.style.visibility = "visible";
+	document.getElementById("message_pass").style.visibility = "visible";
 }

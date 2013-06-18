@@ -9,6 +9,7 @@
 	z-index:1;
 	text-align:right;
 	overflow:hidden;
+	position:fixed;
 }
 
 #header header{
