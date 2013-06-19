@@ -1,12 +1,14 @@
 <?php
 /**
  * Contains a single Post entry for the blog
+ * Features a helper method for building and returning Arrays of posts
  *
  * @author Stephen McMahon <stephentmcm@gmail.com>
  */
 class Post
 {
     private $database;
+    //Holds the posts data in an Array most easily accessed through the getters
     private $post;
 
     /**
@@ -105,6 +107,7 @@ class Post
 
         return(true);
     }
+    
     /**
      * Uses the super cool on duplicate key update MySQL function to update an existing post
      * @return Boolean   True on sucess else false
@@ -117,8 +120,8 @@ class Post
             $statement = "INSERT INTO `posts` (`postid`, `title`, `status`, `ACL`, `content`, `date`, `username`)
                                        VALUES (`:postid`, `:title`, `:status`, `:ACL`, `:content`, `:date`, `:username`)
                           ON DUPLICATE KEY UPDATE
-                          postid=values(postid), title=values(title), status=values(status), ACL=values(ACL), content=values(content), date=values(date),
-                          username=values(username) ";
+                                    postid=values(postid), title=values(title), status=values(status), ACL=values(ACL),
+                                    content=values(content), date=values(date), username=values(username) ";
 
             $query = $this->database->prepare($statement);
 
@@ -133,6 +136,12 @@ class Post
         return(true);
     }//end save
 
+    /**
+     * Deletes the current post from the database
+     * 
+     * @return Boolean Sucess or failure
+     * @throws Exception Database exceptions if query fails
+     */
     public function delete()
     {
         try {
@@ -158,7 +167,7 @@ class Post
      * @return Array The post array with keys in PDO named parameter form
      * @link www.php.net/maunal/PDO Info about binded parameters
      */
-    public function postNamedParams()
+    private function postNamedParams()
     {
         foreach ($this->post as $key => $value) {
             $key = ':'.$key;
