@@ -78,10 +78,7 @@ class Post extends Article
         try {
 
             $statement = "INSERT INTO `posts` ( `title`, `displayStatus`, `ACL`, `content`, `username`)
-                            VALUES ( :title, :displayStatus, :ACL, :content, :username)
-                            ON DUPLICATE KEY UPDATE
-                                    title=values(title), displayStatus=values(displayStatus), ACL=values(ACL),
-                                    content=values(content), username=values(username) ";
+                            VALUES ( :title, :displayStatus, :ACL, :content, :username)";
 
             $query = $this->database->prepare($statement);
 

@@ -21,11 +21,11 @@ class Comment extends Article
         try {
             $statement = "SELECT * FROM `comments` WHERE `commentid` = '$id'";
 
-            $comment = $this->database->query($statement)->fetch();
+            $comment = $this->database->query($statement)->fetch(PDO::FETCH_ASSOC);
 
         } catch (Exception $e) {
 
-            throw new Exception('Database error:', 0, $e);
+            throw new Exception($e);
 
             return(false);
         };
@@ -53,9 +53,9 @@ class Comment extends Article
             return(false);
         };
 
-        $keys = array(`title`, `status`, `ACL`, `content`, `username`);
+        $keys = array('postid' ,'displayStatus', 'ACL', 'content', 'username');
 
-        foreach ($keys as $keys) {
+        foreach ($keys as $key) {
             if (!array_key_exists($key, $comment)) {
                 throw new Exception('Create requires an value for "'.$key.'"');
 
@@ -63,9 +63,9 @@ class Comment extends Article
             };
         };
 
-        $this->setTitle($comment['title']);
+        $this->setPostid($comment['postid']);
 
-        $this->setStatus($comment['status']);
+        $this->setStatus($comment['displayStatus']);
 
         $this->setACL($comment['ACL']);
 
@@ -75,21 +75,20 @@ class Comment extends Article
 
         try {
 
-            $statement = "INSERT INTO `comments` ( `title`, `status`, `ACL`, `content`, `username`)
-                                       VALUES ( `:title`, `:status`, `:ACL`, `:content`, `:username`)
-                          ON DUPLICATE KEY UPDATE
-                          title=values(title), status=values(status), ACL=values(ACL), content=values(content),
-                          username=values(username) ";
+            $statement = "INSERT INTO `comments` ( `postid`, `displayStatus`, `ACL`, `content`, `username`)
+                                       VALUES ( :postid, :displayStatus, :ACL, :content, :username)";
 
             $query = $this->database->prepare($statement);
 
-            $query->execute($this->commentNamedParams());
+            $query->execute($this->articleNamedParams());
 
         } catch (Exception $e) {
-            throw new Exception('Database error:', 0, $e);
+            throw new Exception($e);
 
             return(false);
         };
+        
+        $this->setCommentid($this->database->lastInsertId());
 
         return(true);
     }
@@ -103,18 +102,18 @@ class Comment extends Article
     {
         try {
 
-            $statement = "INSERT INTO `comments` (`commentid`, `title`, `status`, `ACL`, `content`, `date`, `username`)
-                                       VALUES (`:commentid`, `:title`, `:status`, `:ACL`, `:content`, `:date`, `:username`)
+            $statement = "INSERT INTO `comments` (`commentid`, `postid`, `displayStatus`, `ACL`, `content`, `creationDate`, `username`)
+                                       VALUES (:commentid, :postid, :displayStatus, :ACL, :content, :creationDate, :username)
                           ON DUPLICATE KEY UPDATE
-                                    commentid=values(commentid), title=values(title), status=values(status), ACL=values(ACL),
-                                    content=values(content), date=values(date), username=values(username) ";
+                                    commentid=values(commentid), postid=values(postid), displayStatus=values(displayStatus), ACL=values(ACL),
+                                    content=values(content), creationDate=values(creationDate), username=values(username) ";
 
             $query = $this->database->prepare($statement);
 
             $query->execute($this->articleNamedParams());
 
         } catch (Exception $e) {
-            throw new Exception('Database error:', 0, $e);
+            throw new Exception($e);
 
             return(false);
         };
@@ -153,11 +152,22 @@ class Comment extends Article
     {
         $this->article['commentid'] = $param;
     }
+    
+    public function setPostid($param)
+    {
+        $this->article['postid'] = $param;
+    }
+
 
     //*********GETTERS--------------
     public function getComment()
     {
         return($this->article);
+    }
+    
+    public function getPostid()
+    {
+        return($this->article['postid']);
     }
 
     public function getCommentid()
@@ -165,4 +175,4 @@ class Comment extends Article
         return($this->article['commentid']);
     }
 
-}//end comment class
+}
