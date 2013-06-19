@@ -7,7 +7,6 @@
 class Post
 {
     private $database;
-    //Arry that contains all the posts information
     private $post;
 
     /**
