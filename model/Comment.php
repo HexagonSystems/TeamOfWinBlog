@@ -1,27 +1,27 @@
 <?php
 /**
- * Contains a single Post entry for the blog
- * Features a helper method for building and returning Arrays of posts
+ * Contains a single Comment entry for the blog
+ * Features a helper method for building and returning Arrays of comments
  *
  * @author Stephen McMahon <stephentmcm@gmail.com>
  */
-class Post extends Article
+class Comment extends Article
 {
     /**
-     * Loads an existing post from the database
+     * Loads an existing comment from the database
      *
-     * @param Int $postId the id number of the post
+     * @param Int $commentId the id number of the comment
      *
      * @return Boolean   True for loaded false for DB connection error
      * @throws Exception PDO expection
      */
-    public function load($postId)
+    public function load($commentId)
     {
 
         try {
-            $statement = "SELECT * FROM `posts` WHERE `postid` = '$postId'";
+            $statement = "SELECT * FROM `comments` WHERE `commentid` = '$commentId'";
 
-            $post = $this->database->query($statement)->fetch();
+            $comment = $this->database->query($statement)->fetch();
 
         } catch (Exception $e) {
 
@@ -30,23 +30,23 @@ class Post extends Article
             return(false);
         };
 
-        $this->post = $post;
+        $this->comment = $comment;
 
         return(true);
-    }//end loadPost
+    }//end loadComment
 
     /**
-     * Stores the input data in the post object used for creating new post
+     * Stores the input data in the comment object used for creating new comment
      *
-     * @param Array $post Must contain `title`, `status`, `ACL`, `content`,
+     * @param Array $comment Must contain `title`, `status`, `ACL`, `content`,
      * `username`
      *
      * @return Boolean   True on sucess else false
      * @throws Exception Throws Database and custom errors
      */
-    public function create($post = array())
+    public function create($comment = array())
     {
-        if (empty($post)) {
+        if (empty($comment)) {
 
             throw new Exception('Create requires an Array of values');
 
@@ -56,26 +56,26 @@ class Post extends Article
         $keys = array(`title`, `status`, `ACL`, `content`, `username`);
 
         foreach ($keys as $keys) {
-            if (!array_key_exists($key, $post)) {
+            if (!array_key_exists($key, $comment)) {
                 throw new Exception('Create requires an value for "'.$key.'"');
 
                 return(false);
             };
         };
 
-        $this->setTitle($post['title']);
+        $this->setTitle($comment['title']);
 
-        $this->setStatus($post['status']);
+        $this->setStatus($comment['status']);
 
-        $this->setACL($post['ACL']);
+        $this->setACL($comment['ACL']);
 
-        $this->setContent($post['content']);
+        $this->setContent($comment['content']);
 
-        $this->setUsername($post['username']);
+        $this->setUsername($comment['username']);
 
         try {
 
-            $statement = "INSERT INTO `posts` ( `title`, `status`, `ACL`, `content`, `username`)
+            $statement = "INSERT INTO `comments` ( `title`, `status`, `ACL`, `content`, `username`)
                                        VALUES ( `:title`, `:status`, `:ACL`, `:content`, `:username`)
                           ON DUPLICATE KEY UPDATE
                           title=values(title), status=values(status), ACL=values(ACL), content=values(content),
@@ -83,7 +83,7 @@ class Post extends Article
 
             $query = $this->database->prepare($statement);
 
-            $query->execute($this->postNamedParams());
+            $query->execute($this->commentNamedParams());
 
         } catch (Exception $e) {
             throw new Exception('Database error:', 0, $e);
@@ -95,7 +95,7 @@ class Post extends Article
     }
     
     /**
-     * Uses the super cool on duplicate key update MySQL function to update an existing post
+     * Uses the super cool on duplicate key update MySQL function to update an existing comment
      * @return Boolean   True on sucess else false
      * @throws Exception PDO expections on Database errors
      */
@@ -103,10 +103,10 @@ class Post extends Article
     {
         try {
 
-            $statement = "INSERT INTO `posts` (`postid`, `title`, `status`, `ACL`, `content`, `date`, `username`)
-                                       VALUES (`:postid`, `:title`, `:status`, `:ACL`, `:content`, `:date`, `:username`)
+            $statement = "INSERT INTO `comments` (`commentid`, `title`, `status`, `ACL`, `content`, `date`, `username`)
+                                       VALUES (`:commentid`, `:title`, `:status`, `:ACL`, `:content`, `:date`, `:username`)
                           ON DUPLICATE KEY UPDATE
-                                    postid=values(postid), title=values(title), status=values(status), ACL=values(ACL),
+                                    commentid=values(commentid), title=values(title), status=values(status), ACL=values(ACL),
                                     content=values(content), date=values(date), username=values(username) ";
 
             $query = $this->database->prepare($statement);
@@ -123,7 +123,7 @@ class Post extends Article
     }//end save
 
     /**
-     * Deletes the current post from the database
+     * Deletes the current comment from the database
      * 
      * @return Boolean Sucess or failure
      * @throws Exception Database exceptions if query fails
@@ -132,12 +132,12 @@ class Post extends Article
     {
         try {
 
-            $statement = "UPDATE `tow`.`posts` SET `status` = 'deleted'
-                          WHERE `postid` = ?;";
+            $statement = "UPDATE `tow`.`comments` SET `status` = 'deleted'
+                          WHERE `commentid` = ?;";
 
             $query = $this->database->prepare($statement);
 
-            $query->execute($this->getPostid());
+            $query->execute($this->getCommentid());
 
         } catch (Exception $e) {
             throw new Exception('Database error:', 0, $e);
@@ -149,30 +149,20 @@ class Post extends Article
     }
 
     //*********SETTERS----------------------
-    public function setPostid($param)
+    public function setCommentid($param)
     {
-        $this->post['postid'] = $param;
-    }
-
-    public function setTitle($param)
-    {
-        $this->post['title'] = $param;
+        $this->comment['commentid'] = $param;
     }
 
     //*********GETTERS--------------
-    public function getPost()
+    public function getComment()
     {
-        return($this->post);
+        return($this->comment);
     }
 
-    public function getPostid()
+    public function getCommentid()
     {
-        return($this->post['postid']);
+        return($this->comment['commentid']);
     }
 
-    public function getTitle()
-    {
-        return($this->post['title']);
-    }
-
-}//end post class
+}//end comment class
