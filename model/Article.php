@@ -7,9 +7,9 @@
  */
 class Article
 {
-    private $database;
+    protected $database;
     //Holds the articles data in an Array most easily accessed through the getters
-    private $article;
+    protected $article;
 
     /**
      * Sets up an empty Article object
@@ -29,7 +29,7 @@ class Article
      * @return Boolean   True for loaded false for DB connection error
      * @throws Exception PDO expection
      */
-    public function load($articleId)
+    public function load($id)
     {
         return('Error load() not implemented');
     }//end loadArticle
@@ -43,7 +43,7 @@ class Article
      * @return Boolean   True on sucess else false
      * @throws Exception Throws Database and custom errors
      */
-    public function create($article = array())
+    public function create($data = array())
     {
         return('Error create() not implemented');
     }
@@ -87,7 +87,7 @@ class Article
     //*********SETTERS----------------------
     public function setStatus($param)
     {
-        $this->article['status'] = $param;
+        $this->article['displayStatus'] = $param;
     }
 
     public function setACL($param)
@@ -102,7 +102,7 @@ class Article
 
     public function setDate($param)
     {
-        $this->article['date'] = $param;
+        $this->article['creationDate'] = $param;
     }
 
     public function setUsername($param)

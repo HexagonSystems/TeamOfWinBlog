@@ -291,7 +291,7 @@ class User
     public function setPassword($password, $old = 0)
 	{
         if ($old === 0) {
-            $password = ($password);
+            $password = sha1($password);
         };
 
 		$this->password = $password;

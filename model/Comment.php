@@ -15,11 +15,11 @@ class Comment extends Article
      * @return Boolean   True for loaded false for DB connection error
      * @throws Exception PDO expection
      */
-    public function load($commentId)
+    public function load($id)
     {
 
         try {
-            $statement = "SELECT * FROM `comments` WHERE `commentid` = '$commentId'";
+            $statement = "SELECT * FROM `comments` WHERE `commentid` = '$id'";
 
             $comment = $this->database->query($statement)->fetch();
 
@@ -30,7 +30,7 @@ class Comment extends Article
             return(false);
         };
 
-        $this->comment = $comment;
+        $this->article = $comment;
 
         return(true);
     }//end loadComment
@@ -151,18 +151,18 @@ class Comment extends Article
     //*********SETTERS----------------------
     public function setCommentid($param)
     {
-        $this->comment['commentid'] = $param;
+        $this->article['commentid'] = $param;
     }
 
     //*********GETTERS--------------
     public function getComment()
     {
-        return($this->comment);
+        return($this->article);
     }
 
     public function getCommentid()
     {
-        return($this->comment['commentid']);
+        return($this->article['commentid']);
     }
 
 }//end comment class

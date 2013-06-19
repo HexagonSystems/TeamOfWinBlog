@@ -15,13 +15,13 @@ class Post extends Article
      * @return Boolean   True for loaded false for DB connection error
      * @throws Exception PDO expection
      */
-    public function load($postId)
+    public function load($id)
     {
 
         try {
-            $statement = "SELECT * FROM `posts` WHERE `postid` = '$postId'";
-
-            $post = $this->database->query($statement)->fetch();
+            $statement = "SELECT * FROM `posts` WHERE `postid` = '$id'";
+            
+            $post = $this->database->query($statement)->fetch(PDO::FETCH_ASSOC);
 
         } catch (Exception $e) {
 
@@ -30,7 +30,7 @@ class Post extends Article
             return(false);
         };
 
-        $this->post = $post;
+        $this->article = $post;
 
         return(true);
     }//end loadPost
@@ -52,12 +52,14 @@ class Post extends Article
 
             return(false);
         };
+        
+        //The keys we require
+        $keys = array('title', 'displayStatus', 'ACL', 'content', 'username');
 
-        $keys = array(`title`, `status`, `ACL`, `content`, `username`);
-
-        foreach ($keys as $keys) {
+        //Check if each key exists in the $post array we've recieved
+        foreach ($keys as $key) {
             if (!array_key_exists($key, $post)) {
-                throw new Exception('Create requires an value for "'.$key.'"');
+                throw new Exception('Create requires an value for "'.$key.'" received: '.  implode(", ", array_keys($post)));
 
                 return(false);
             };
@@ -65,7 +67,7 @@ class Post extends Article
 
         $this->setTitle($post['title']);
 
-        $this->setStatus($post['status']);
+        $this->setStatus($post['displayStatus']);
 
         $this->setACL($post['ACL']);
 
@@ -75,21 +77,23 @@ class Post extends Article
 
         try {
 
-            $statement = "INSERT INTO `posts` ( `title`, `status`, `ACL`, `content`, `username`)
-                                       VALUES ( `:title`, `:status`, `:ACL`, `:content`, `:username`)
-                          ON DUPLICATE KEY UPDATE
-                          title=values(title), status=values(status), ACL=values(ACL), content=values(content),
-                          username=values(username) ";
+            $statement = "INSERT INTO `posts` ( `title`, `displayStatus`, `ACL`, `content`, `username`)
+                            VALUES ( :title, :displayStatus, :ACL, :content, :username)
+                            ON DUPLICATE KEY UPDATE
+                                    title=values(title), displayStatus=values(displayStatus), ACL=values(ACL),
+                                    content=values(content), username=values(username) ";
 
             $query = $this->database->prepare($statement);
 
-            $query->execute($this->postNamedParams());
+            $query->execute($this->articleNamedParams());
 
         } catch (Exception $e) {
             throw new Exception('Database error:', 0, $e);
 
             return(false);
         };
+        
+        $this->setPostid($this->database->lastInsertId());
 
         return(true);
     }
@@ -103,18 +107,19 @@ class Post extends Article
     {
         try {
 
-            $statement = "INSERT INTO `posts` (`postid`, `title`, `status`, `ACL`, `content`, `date`, `username`)
-                                       VALUES (`:postid`, `:title`, `:status`, `:ACL`, `:content`, `:date`, `:username`)
+            $statement = "INSERT INTO `posts` (`postid`, `title`, `displayStatus`, `ACL`, `content`, `creationDate`, `username`)
+                                       VALUES (:postid, :title, :displayStatus, :ACL, :content, :creationDate, :username)
                           ON DUPLICATE KEY UPDATE
-                                    postid=values(postid), title=values(title), status=values(status), ACL=values(ACL),
-                                    content=values(content), date=values(date), username=values(username) ";
+                                    title=values(title), displayStatus=values(displayStatus), ACL=values(ACL),
+                                    content=values(content), creationDate=values(creationDate), username=values(username) ";
 
             $query = $this->database->prepare($statement);
 
             $query->execute($this->articleNamedParams());
 
         } catch (Exception $e) {
-            throw new Exception('Database error:', 0, $e);
+
+            throw new Exception($e);
 
             return(false);
         };
@@ -151,28 +156,28 @@ class Post extends Article
     //*********SETTERS----------------------
     public function setPostid($param)
     {
-        $this->post['postid'] = $param;
+        $this->article['postid'] = $param;
     }
 
     public function setTitle($param)
     {
-        $this->post['title'] = $param;
+        $this->article['title'] = $param;
     }
 
     //*********GETTERS--------------
     public function getPost()
     {
-        return($this->post);
+        return($this->article);
     }
 
     public function getPostid()
     {
-        return($this->post['postid']);
+        return($this->article['postid']);
     }
 
     public function getTitle()
     {
-        return($this->post['title']);
+        return($this->article['title']);
     }
 
 }//end post class
