@@ -5,6 +5,5 @@
 					<li><a href="index.php?location=loginPage">LOG IN</a></li>
 				</ul>
 			</nav>
-
-</header>
-<div id="content">
+			</header>
+			<div id="content">

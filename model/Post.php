@@ -1,30 +1,12 @@
 <?php
 /**
  * Contains a single Post entry for the blog
+ * Features a helper method for building and returning Arrays of posts
  *
  * @author Stephen McMahon <stephentmcm@gmail.com>
  */
-class Post
+class Post extends Article
 {
-    private $database;
-    //Arry that contains all the posts information
-    private $post;
-
-    /**
-     * Sets up an empty Post object
-     *
-     * @param PDO $database Needs a PDO database connection
-     */
-    public function __construct()
-    {
-        
-    }//end construct
-    
-    public function setDatabase(PDO $database)
-    {
-    	$this->database = $database;
-    }
-
     /**
      * Loads an existing post from the database
      *
@@ -33,13 +15,13 @@ class Post
      * @return Boolean   True for loaded false for DB connection error
      * @throws Exception PDO expection
      */
-    public function loadPost($postId)
+    public function load($id)
     {
 
         try {
-            $statement = "SELECT * FROM `posts` WHERE `postid` = '$postId'";
-
-            $post = $this->database->query($statement)->fetch();
+            $statement = "SELECT * FROM `posts` WHERE `postid` = '$id'";
+            
+            $post = $this->database->query($statement)->fetch(PDO::FETCH_ASSOC);
 
         } catch (Exception $e) {
 
@@ -48,7 +30,7 @@ class Post
             return(false);
         };
 
-        $this->post = $post;
+        $this->article = $post;
 
         return(true);
     }//end loadPost
@@ -70,12 +52,14 @@ class Post
 
             return(false);
         };
+        
+        //The keys we require
+        $keys = array('title', 'displayStatus', 'ACL', 'content', 'username');
 
-        $keys = array(`title`, `status`, `ACL`, `content`, `username`);
-
-        foreach ($keys as $keys) {
+        //Check if each key exists in the $post array we've recieved
+        foreach ($keys as $key) {
             if (!array_key_exists($key, $post)) {
-                throw new Exception('Create requires an value for "'.$key.'"');
+                throw new Exception('Create requires an value for "'.$key.'" received: '.  implode(", ", array_keys($post)));
 
                 return(false);
             };
@@ -83,7 +67,7 @@ class Post
 
         $this->setTitle($post['title']);
 
-        $this->setStatus($post['status']);
+        $this->setStatus($post['displayStatus']);
 
         $this->setACL($post['ACL']);
 
@@ -93,24 +77,24 @@ class Post
 
         try {
 
-            $statement = "INSERT INTO `posts` ( `title`, `status`, `ACL`, `content`, `username`)
-                                       VALUES ( `:title`, `:status`, `:ACL`, `:content`, `:username`)
-                          ON DUPLICATE KEY UPDATE
-                          title=values(title), status=values(status), ACL=values(ACL), content=values(content),
-                          username=values(username) ";
+            $statement = "INSERT INTO `posts` ( `title`, `displayStatus`, `ACL`, `content`, `username`)
+                            VALUES ( :title, :displayStatus, :ACL, :content, :username)";
 
             $query = $this->database->prepare($statement);
 
-            $query->execute($this->postNamedParams());
+            $query->execute($this->articleNamedParams());
 
         } catch (Exception $e) {
             throw new Exception('Database error:', 0, $e);
 
             return(false);
         };
+        
+        $this->setPostid($this->database->lastInsertId());
 
         return(true);
     }
+    
     /**
      * Uses the super cool on duplicate key update MySQL function to update an existing post
      * @return Boolean   True on sucess else false
@@ -120,18 +104,19 @@ class Post
     {
         try {
 
-            $statement = "INSERT INTO `posts` (`postid`, `title`, `status`, `ACL`, `content`, `date`, `username`)
-                                       VALUES (`:postid`, `:title`, `:status`, `:ACL`, `:content`, `:date`, `:username`)
+            $statement = "INSERT INTO `posts` (`postid`, `title`, `displayStatus`, `ACL`, `content`, `creationDate`, `username`)
+                                       VALUES (:postid, :title, :displayStatus, :ACL, :content, :creationDate, :username)
                           ON DUPLICATE KEY UPDATE
-                          postid=values(postid), title=values(title), status=values(status), ACL=values(ACL), content=values(content), date=values(date),
-                          username=values(username) ";
+                                    title=values(title), displayStatus=values(displayStatus), ACL=values(ACL),
+                                    content=values(content), creationDate=values(creationDate), username=values(username) ";
 
             $query = $this->database->prepare($statement);
 
-            $query->execute($this->postNamedParams());
+            $query->execute($this->articleNamedParams());
 
         } catch (Exception $e) {
-            throw new Exception('Database error:', 0, $e);
+
+            throw new Exception($e);
 
             return(false);
         };
@@ -139,6 +124,12 @@ class Post
         return(true);
     }//end save
 
+    /**
+     * Deletes the current post from the database
+     * 
+     * @return Boolean Sucess or failure
+     * @throws Exception Database exceptions if query fails
+     */
     public function delete()
     {
         try {
@@ -159,141 +150,31 @@ class Post
         return(true);
     }
 
-    /**
-     * Quick function to shift the keys from 'postid' to ':postid' etc
-     * @return Array The post array with keys in PDO named parameter form
-     * @link www.php.net/maunal/PDO Info about binded parameters
-     */
-    public function postNamedParams()
-    {
-        foreach ($this->post as $key => $value) {
-            $key = ':'.$key;
-            $binded[$key] = $value;
-        }
-
-        return($binded);
-    }//end postNamedParams
-
     //*********SETTERS----------------------
     public function setPostid($param)
     {
-        $this->post['postid'] = $param;
+        $this->article['postid'] = $param;
     }
 
     public function setTitle($param)
     {
-        $this->post['title'] = $param;
-    }
-
-    public function setStatus($param)
-    {
-        $this->post['status'] = $param;
-    }
-
-    public function setACL($param)
-    {
-        $this->post['ACL'] = $param;
-    }
-
-    public function setContent($param)
-    {
-        $this->post['content'] = $param;
-    }
-
-    public function setDate($param)
-    {
-        $this->post['date'] = $param;
-    }
-
-    public function setUsername($param)
-    {
-        $this->post['username'] = $param;
+        $this->article['title'] = $param;
     }
 
     //*********GETTERS--------------
     public function getPost()
     {
-        return($this->post);
+        return($this->article);
     }
 
     public function getPostid()
     {
-        return($this->post['postid']);
+        return($this->article['postid']);
     }
 
     public function getTitle()
     {
-        return($this->post['title']);
+        return($this->article['title']);
     }
 
-    public function getStatus()
-    {
-        return($this->post['status']);
-    }
-
-    public function getACL()
-    {
-        return($this->post['ACL']);
-    }
-
-    public function getContent()
-    {
-        return($this->post['content']);
-    }
-
-    public function getDate()
-    {
-        return($this->post['date']);
-    }
-
-    public function getUsername()
-    {
-        return($this->post['username']);
-    }
-    
-    public function getPosts($startPost, $endPost)
-    {
-    	try
-    	{
-    	$statement = "SELECT postId, title, status, content, date, username
-	    			FROM`posts`
-	    			WHERE`status`='published'
-	    			LIMIT :startPost, :endPost";
-    	
-    	$query = $this->database->prepare($statement);
-    	
-    	$query->bindParam(':startPost'   , $startPost , PDO::PARAM_INT);
-    	$query->bindParam(':endPost'  	 , $endPost   , PDO::PARAM_INT);
-    	
-    	$query->execute();
-    	
-    	$arrayOfPosts = array();
-    	 
-    	foreach($query as $row){
-    		$tempObject = new Post();
-    	
-    		$tempObject->setPostid($row['postId']);
-    		$tempObject->setTitle($row['title']);
-    		$tempObject->setStatus($row['status']);
-    		$tempObject->setContent($row['content']);
-    		$tempObject->setDate($row['date']);
-    		$tempObject->setUsername($row['username']);
-    	
-    		$arrayOfPosts[$tempObject->getPostid()] = $tempObject;
-    	
-    	}
-    	
-    	//print_r($arrayOfPosts);
-    	 
-    	return $arrayOfPosts;
-    	}
-    	catch(PDOException $e)
-    	{
-    		echo $e;
-    		return false;	
-    	}
-    	
-    	
-    }
-    
 }//end post class

@@ -19,7 +19,7 @@ class RegisterView
 	/**
 	 * Accept a template to load
 	 */
-	public function __construct($template,$header,$footer,$nav)
+	public function __construct($template,$footer)
 	{
 		// echo "In Consttructor" ;
 		if (file_exists($template))
@@ -31,15 +31,6 @@ class RegisterView
 			 */
 			$this->render = $template;
 		}
-		if (file_exists($header))
-		{
-			/**
-			 * trigger render to include file when this model is destroyed
-			 * if we render it now, we wouldn't be able to assign variables
-			 * to the view!
-			 */
-			$this->header = $header;
-		}
 		if (file_exists($footer))
 		{
 			/**
@@ -48,15 +39,6 @@ class RegisterView
 			 * to the view!
 			 */
 			$this->footer = $footer;
-		}
-		if (file_exists($nav))
-		{
-			/**
-			 * trigger render to include file when this model is destroyed
-			 * if we render it now, we wouldn't be able to assign variables
-			 * to the view!
-			 */
-			$this->nav = $nav;
 		}
 	}
 	/*** Receives assignments from controller and stores in local data array
@@ -83,8 +65,6 @@ class RegisterView
 		}
 		//echo "In Destructor" ;
 		//render view
-		include_once($this->header);
-		include_once($this->nav);
 		include_once($this->render);
 		include_once($this->footer);
 	}

@@ -14,7 +14,3 @@ if(isset($_SESSION['activeUser'])){
 }
 
 ?>
-
-<form action="index.php?action=logout" method = "GET">
-	<input type="submit" name="action" value="Logout">
-</form>
