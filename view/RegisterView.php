@@ -15,6 +15,7 @@ class RegisterView
 	private $header = FALSE;
 	private $footer = FALSE;
 	private $nav = FALSE;
+	private $message = FALSE;
 	/**
 	 * Accept a template to load
 	 */
@@ -67,10 +68,19 @@ class RegisterView
 	{
 		$this->data[$variable] = $value;
 	}
+	public function message($type, $message)
+	{
+		$this->message['type'] = $type;
+		$this->message['message'] = $message;
+	}
 	public function __destruct()
 	{
 		//parse data variables into local variables, so that they render to the view
 		$data = $this->data;
+		
+		if($this->message){
+			$message = $this->message;
+		}
 		//echo "In Destructor" ;
 		//render view
 		include_once($this->header);

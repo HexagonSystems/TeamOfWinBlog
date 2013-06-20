@@ -61,19 +61,19 @@ var validPassword = {
 	"length_correct" : null
 };
 
+
 var field_name;
 ;
 var field_input;
 var field_message;
 var field_value;
 
-function validate_pass() {
-
-	field_name = "pass";
+function validate_pass(field_name) {
+	field_name = field_name;
 	field_input = getInputBox(field_name);
+	field_inputBox = document.getElementById(field_input);
 	field_message = getMessageBox(field_name);
 	field_value = getInputValue(field_input);
-	;
 
 	correctLength = checkCorrectLength();
 
@@ -107,7 +107,16 @@ function validate_pass() {
 	 * "\n" + "countSpecial: " + countSpecial + "\n" + "Total Points: " +
 	 * points);
 	 */
-
+	
+	function passwordValid(){
+		if(	countUpper > 0 && countLower > 0
+			&& countNumber > 0 && checkCorrectLength()){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
 	/**
 	 * Calculate Points
 	 */
@@ -237,9 +246,14 @@ function validate_pass() {
 
 		if (points < 80) {
 			psb.style.backgroundColor = psbColorCode['0'];
-			validChecker['pass'] = false;
+			displayPassInvalid();
 		} else {
-			validChecker['pass'] = true;
+			if(passwordValid()){
+				displayPassValid();
+			}else{
+				displayPassInvalid();
+			}
+			
 			if (points >= 80 && points < 190) {
 				if (points < 120) {
 					psb.style.backgroundColor = psbColorCode['80'];
@@ -286,12 +300,14 @@ function validate_pass() {
 		messageBoxArea.innerHTML = points;
 	}
 
-	function displayPassOk() {
-		field_input.style.border = "3px solid green";
-		if (field_message.style.visibility == "visible") {
-			hideMessageBox("message_pass");
-		}
-
+	function displayPassValid() {
+		field_inputBox.style.border = "3px solid green";
+		validChecker['pass'] = true;
+	}
+	
+	function displayPassInvalid(){
+		field_inputBox.style.border = "3px solid #C4C4C4";
+		validChecker['pass'] = false;
 	}
 
 	function openPasswordBox() {

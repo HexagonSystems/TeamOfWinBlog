@@ -37,6 +37,12 @@ class Router
                 $controller = new AdminController($conn);
 					$controller->invoke();
                 break;
+            case "viewBlog":
+               	include_once 'controller/BlogController.php';
+                $controller = new BlogController();
+                $controller->setDatabase($conn);
+                $controller->invoke();
+                break;
             default:
                 include_once 'controller/IndexController.php';
                 $controller = new IndexController();

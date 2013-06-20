@@ -75,6 +75,7 @@ class IndexView
 	{
 		foreach($this->currentPagePosts as $currentPost)
 		{
+			$postId = $currentPost->getPostid();
 			$postTitle = $currentPost->getTitle();
 			$postContent = $currentPost->getContent();
 			$postDate = $currentPost->getDate();

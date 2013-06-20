@@ -52,36 +52,31 @@
 	border: 3px solid #C4C4C4;
 }
 
-#content #registerBox input[type='submit'] {
+#content #registerBox button {
 	height: 45px;
 	width: 95%;
 	min-width: auto;
 	font-size: 20px;
 	padding: 10px;
-	background-color: #E67418;
 	color: white;
 	border: 0px;
 }
 
-#content #registerBox button {
-	width: 95%;
-	display: block;
-	min-width: auto;
-	font-size: 20px;
-	padding: 10px;
-	background-color: #E67418;
-	color: white;
-	border: 0px;
-	margin-top: 20px;
+.disabledButton{
+	background-color:#F5CB7D;	
 }
 
-#content #registerBox input[type='submit']:hover {
+.disabledButton:hover{
+	background-color:#F7BE54;
+}
+
+.enabledButton{
+	background-color: #E67418;
+}
+
+.enabledButton:hover{
 	background-color: #D46B16;
 	cursor:pointer;
-}
-
-#content #registerBox button:hover {
-	background-color: #D46B16;
 }
 
 #content .messageBox {

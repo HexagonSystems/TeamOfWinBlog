@@ -41,7 +41,7 @@ class RegisterController
 					$user = $user->RegisterUser($_POST["username"], $_POST["pass"]);
 					if(!is_a($user, 'User')){
 						//NOt logged In
-						echo $user;
+						echo $user."TESTING";
 						$this->template = 'view/'.$this->$loggedOutView.'Template.php';
 						include_once('view/'.$this->$loggedOutView.'.php');
 						//create a new view and pass it our template
@@ -69,24 +69,24 @@ class RegisterController
 
 			}else if($_GET['action'] == 'register')
 			{
-				echo "attempting to register<br/>";
 				$user = new User($this->conn);
 				if(isset($_POST['username']) && isset($_POST['pass']) && isset($_POST['email']))
 				{
 					$user = $user->createUser($_POST["username"], $_POST["pass"], $_POST["email"], "1");
 					if(!is_a($user, 'User')){
 						//NOt logged In
-						echo $user;
-						$this->template = 'view/'.$this->$loggedOutView.'Template.php';
-						include_once('view/'.$this->$loggedOutView.'.php');
+						$this->template = 'view/'.$this->loggedOutView.'Template.php';
+						include_once('view/'.$this->loggedOutView.'.php');
 						//create a new view and pass it our template
-						$view = new RegisterView($this->template,$this->header,$this->footer,$this->nav);
+						$view = new RegisterView($this->template,$this->header,$this->footer,$this->nav,$user);
 						$content ="";
+						$view->message('error', $user);
 						$view->assign('title' , 'Loggged in');
 						$view->assign('content' , $content);
 					}else
 					{
 						echo $user->save();
+						echo "TESTING";
 						
 					}
 				}

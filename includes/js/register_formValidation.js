@@ -2,11 +2,12 @@ var xmlhttp;
 
 var head_input = "register_";
 var head_message = "message_";
+var contentBox_name = "submitBox";
 
 var validChecker = {
 		"username"	: null,
 		"email"		: null,
-		"password"	: null
+		"pass"	: null
 	};
 
 /**
@@ -66,24 +67,34 @@ function validateEntry(field_input){
 	
 	if(field_has_data){
 		switch(field_name){
-		case "username":	validate_username();
+		case "username":	validate_username(field_name);
 							break;
-		case "email":		validate_email();
+		case "email":		validate_email(field_name);
 							break;		
-		case "pass":		validate_pass();
+		case "pass":		validate_pass(field_name);
 							break;	
 		}
 		
 	}
-	
-	var submitBox = document.getElementById("submitBox");
-	if(validChecker["username"] && validChecker["email"] && validChecker["pass"]){
-		submitBox.innerHTML = '<input type="submit" value="Sign me up!">';
+	var contentBox = document.getElementById(contentBox_name);
+	if(fieldsValid()){
+		contentBox.getElementsByTagName("span")[0].innerHTML = '';
+		contentBox.getElementsByTagName("button")[0].disabled = false;
+		contentBox.getElementsByTagName("button")[0].className = "enabledButton";
 	}else{
-		submitBox.innerHTML = "Do everything right!</br>";
-		for(var value in validChecker){
-			submitBox.innerHTML += "<br/>" + validChecker[value];
+		contentBox.getElementsByTagName("span")[0].innerHTML = 'Please fill in all fields correctly';
+		contentBox.getElementsByTagName("button")[0].disabled = true;
+		contentBox.getElementsByTagName("button")[0].className = "disabledButton";
+	}
+	
+	function fieldsValid(){
+		for(var field_name in validChecker){
+			if(!validChecker[field_name] || validChecker[field_name] === null){
+				return false;
+			}
 		}
+		
+		return true;
 	}
 }
 
@@ -172,9 +183,8 @@ function messageBoxActive(messageBox) {
 	}
 }
 
-function validate_username() {
-	
-	var field_name = "username";
+function validate_username(field_name) {
+
 	var field_input = getInputBox(field_name);
 	var field_message = getMessageBox(field_name);
 	var field_value = getInputValue(field_input);
@@ -186,9 +196,8 @@ function validate_username() {
 	}
 }
 
-function validate_email() {
+function validate_email(field_name) {
 	
-	var field_name = "email";
 	var field_input = getInputBox(field_name);
 	var field_message = getMessageBox(field_name);
 	var field_value = getInputValue(field_input);

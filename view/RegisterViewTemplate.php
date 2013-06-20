@@ -10,7 +10,7 @@
 
 <article id="registerBox">
 	<span class="title">Create your account</span>
-	<form action="index.php?location=loginPage&action=register"
+	<form action="index.php?location=registerPage&action=register"
 		method="POST">
 		<ul>
 			<!-- Username -->
@@ -52,7 +52,18 @@
 					</ul>
 
 				</div></li>
-			<li id="submitBox"><input type="submit" value="Sign me up!"></li>
+			<li id="submitBox">
+				<span>
+					<?php	
+						if(isset($message)){
+							echo $message['type'].": ".$message['message'];
+						}else{
+							echo "Please fill in all fields correctly";
+						}
+					?>
+				</span>
+				<button class="disabledButton" disabled>Sign me up!</button>
+			</li>
 		
 		</ul>
 	</form>
