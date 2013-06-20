@@ -1,4 +1,4 @@
-<nav>
+<nav class="clearfix">
 				<ul>
 					<li><a href="index.php?location=indexPage">HOME</a></li>
 					<li><a href="index.php?location=postPage">NEW POST</a></li>

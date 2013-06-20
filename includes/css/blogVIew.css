@@ -50,6 +50,8 @@
 }
 
 #content article{
+	text-align:left;
+	width:90%;
 	overflow:hidden;
 	padding:15px;
 	margin-top: 5em;

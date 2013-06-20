@@ -2,7 +2,7 @@
 </div>
 
 <!-- Footer -->
-<footer id="footer">
+<footer class="bottomabsolute fix">
 	<article class="copyright">
 		&copy;
 		Team Of Win

@@ -1,5 +1,3 @@
-<link rel="stylesheet" type="text/css" href="includes/css/blogView.css" />
-
 <section id="blogBox">
 	<header>
 		<?php echo $blog->getTitle(); ?>

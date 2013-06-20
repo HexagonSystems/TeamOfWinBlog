@@ -14,6 +14,7 @@ class Router
             case "indexPage":
                 include_once 'controller/IndexController.php';
 				$controller = new IndexController();
+				$controller->setDatabase($conn);
 				$controller->invoke();
                 break;
             case "loginPage":
@@ -40,6 +41,12 @@ class Router
                 include_once 'controller/AdminController.php';
                 $controller = new AdminController($conn);
 					$controller->invoke();
+                break;
+            case "viewBlog":
+                include_once 'controller/BlogController.php';
+                $controller = new BlogController();
+                $controller->setDatabase($conn);
+                $controller->invoke();
                 break;
 			case "logout":
 				

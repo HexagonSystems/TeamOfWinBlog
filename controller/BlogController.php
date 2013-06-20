@@ -33,7 +33,7 @@ class BlogController
 			
 			$post = new Post();
 			$post->setDatabase($this->conn);
-			$post->loadPost($_GET['blog']);
+			$post->load($_GET['blog']);
 			
 			$this->blog = $post;
 

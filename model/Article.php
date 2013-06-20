@@ -16,11 +16,17 @@ class Article
      *
      * @param PDO $database Needs a PDO database connection
      */
-    public function __construct(PDO $database)
+    public function __construct()
     {
-        $this->database = $database;
+    	
     }//end construct
-
+	
+    public function setDatabase(PDO $database)
+    {
+    	$this->database = $database;
+    }
+        
+   	
     /**
      * Loads an existing article from the database
      *
@@ -29,11 +35,11 @@ class Article
      * @return Boolean   True for loaded false for DB connection error
      * @throws Exception PDO expection
      */
-    public function load($id)
+    /*public function load($id)
     {
         return('Error load() not implemented');
     }//end loadArticle
-
+	*/
     /**
      * Stores the input data in the article object used for creating new article
      *
@@ -102,7 +108,7 @@ class Article
 
     public function setDate($param)
     {
-        $this->article['creationDate'] = $param;
+        $this->article['date'] = $param;
     }
 
     public function setUsername($param)
