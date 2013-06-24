@@ -10,7 +10,13 @@ class Router
     public static function route(PDO $conn)
     {
         $getVars = $_GET;
-
+        
+        $cookieMonster = new CookieMonster();
+        
+        $cookieMonster->setDatabase($conn);
+        
+        $cookieMonster->lookForCookies();
+        
         $page = isset($getVars['location']) ? $getVars['location'] : 'empty';
 
         switch ($page) {
