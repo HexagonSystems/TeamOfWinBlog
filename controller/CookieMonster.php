@@ -63,7 +63,7 @@ class CookieMonster
 
     public function giveCookie(User $user)
     {
-        $hash = $this->bakeCookie($user->getUsername().$user->getLastLogin());
+        $hash = $this->bakeCookie($user->getUsername(),$user->getLastLogin());
 
         $oneMonthFromNow = time() + (30 * 7 * 24 * 60 * 60);
 
