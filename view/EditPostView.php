@@ -51,6 +51,7 @@ class EditPostView
 	{
 		//parse data variables into local variables, so that they render to the view
 		$data = $this->data;
+                $title = $data['title'];
 		//echo "In Destructor" ;
 		//render view
 		include_once($this->render);

@@ -27,8 +27,7 @@ class CookieMonster
 
     public function setDatabase(PDO $database)
     {
-        $this->database = $database;
-        $this->user = new User($this->database);
+        $this->user = new User($database);
     }
 
     public function lookForCookies()
@@ -39,7 +38,7 @@ class CookieMonster
             $cookie = $_COOKIE['cookie'];
 
             if ($this->eatCookie($cookie)) {
-
+                echo'om nom nom nom';
                 //User model tries to log in and will return the result
                 return($this->user->automaticLogin($cookie['username']));
 
@@ -50,9 +49,11 @@ class CookieMonster
     private function eatCookie($cookie)
     {
         $lastLogin = $this->user->getlastLogin($cookie['username']);
-
-        $hash = $this->bakeCookie($cookie['username'].$lastLogin);
-
+        
+        $hash = $this->bakeCookie($cookie['username'],$lastLogin);
+        
+        echo 'nhash:= '.$hash.'<br>';
+        echo 'chash:- '.$cookie['hash'];
         if ($hash === $cookie['hash']) {
             return true;
         } else {
@@ -61,9 +62,9 @@ class CookieMonster
 
     }
 
-    public function giveCookie(User $user)
+    public function giveCookie(User $user)           
     {
-        $hash = $this->bakeCookie($user->getUsername(),$user->getLastLogin());
+        $hash = $this->bakeCookie($user->getUsername(),$user->getlastLogin());
 
         $oneMonthFromNow = time() + (30 * 7 * 24 * 60 * 60);
 
@@ -74,9 +75,9 @@ class CookieMonster
 
     }
 
-    public function bakeCookie($username, $lastLogin)
+    public function bakeCookie($username, $time)
     {
-        return(crypt($username.$lastLogin));
+        return($username.' - '.$time);
     }
 
     public function smashCookies(User $user)
