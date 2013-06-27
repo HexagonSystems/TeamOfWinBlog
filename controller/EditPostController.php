@@ -23,9 +23,10 @@ class EditPostController
     {
         if (!isset($_GET['action'])) {
             $this->template = 'view/'.$this->fileName.'Template.php';
-            include_once 'view/'.$this->fileName.'.php');
+            include_once('view/'.$this->fileName.'.php');
             //create a new view and pass it our template
             $view = new EditPostView($this->template, $this->footer);
+            $view->assign('title', 'New');
         } elseif (isset($_GET['action'])) {
 
         }

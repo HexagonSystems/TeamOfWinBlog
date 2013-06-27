@@ -213,8 +213,8 @@ class User
 
         $this->setEmail($user["email"]);
 
-        //$this->firstLogin = $firstLogin;
         $this->setLastLogin();
+        
         $_SESSION['activeUser'] = $this->getUsername();
 
         $this->setAccessLevel($user['ACL']);
@@ -232,6 +232,7 @@ class User
      */
     public function save()
     {
+        die('add last log date to this save!!!!');
         try {
 
             $statement = "INSERT INTO `users` (`username`, `email`, `userPassword`, `ACL`)
@@ -257,7 +258,7 @@ class User
     }
 
     
-    public function automaticLogin($username) {
+    public function automaticLogin($username, $session = true) {
         
         if ($this->checkUsername($username) == "Username not found") {
             return("Username not found");
@@ -283,8 +284,10 @@ class User
 
         $this->setLastLogin();
         
-        $_SESSION['activeUser'] = $this->getUsername();
-
+        if($session){
+            $this->sessionCreate();
+        }
+        
         $this->setAccessLevel($user['ACL']);
 
         //If success return this object
@@ -349,19 +352,20 @@ class User
     //Last Login
     public function setLastLogin()
     {
-        $this->lastLogin = time();
+        $this->lastLogin = date('Y-m-d H:i:s');
+        $this->save();
     }
     public function getlastLogin($username = null)
     {
         if($username != null){
             try {
-                $user = $this->database->query("select lastLogin from users where username = '$username'")->fetch(PDO::FETCH_ASSOC);
+                $user = $this->database->query("select lastLoginDate from users where username = '$username'")->fetch();
             } catch (Exception $e) {
                 throw new Exception( 'Database error:', 0, $e);
 
                 return;
             };
-            return($user['lastLogin']);
+            return($user['lastLoginDate']);
         }
         return $this->lastLogin;
     }

@@ -11,6 +11,10 @@
 <script	src="includes/js/register_formValidation.js"></script>
 <script	src="includes/js/register_passValidation.js"></script>
 <link rel="stylesheet" type="text/css" href="includes/css/loginView.css" />
+<script	src="includes/wysiwygeditor/advanced.js"></script>
+<script	src="includes/wysiwygeditor/wysihtml5-0.4.0pre.min.js"></script>
+<link rel="stylesheet" type="text/css" href="includes/wysiwygeditor/stylesheet.css" />
+
 
 </head>
 <!-- the body section -->
