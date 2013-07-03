@@ -17,17 +17,15 @@ class HeadController
         }
 
     } //end constructor
+    
     public function invoke()
     {
-        if (!isset($_GET['action'])) {
-            $this->template = 'view/'.$this->fileName.'Template.php';
-            include_once('view/'.$this->fileName.'.php');
-            //create a new view and pass it our template
-            $view = new HeadView($this->template,$this->header,$this->nav);
-            $content ="";
-            $view->assign('title' , 'Loggged in');
-            $view->assign('content' , $content);
-        }
-
+        $this->template = 'view/'.$this->fileName.'Template.php';
+        include_once('view/'.$this->fileName.'.php');
+        //create a new view and pass it our template
+        $view = new HeadView($this->template,$this->header,$this->nav);
+        $content ="";
+        $view->assign('title' , 'Loggged in');
+        $view->assign('content', $content);
     } // end function
-} //end class
+}
