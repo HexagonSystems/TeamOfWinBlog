@@ -3,7 +3,7 @@
  * Define document paths
  */
 define('SERVER_ROOT' , $_SERVER["DOCUMENT_ROOT"]);
-define('SITE_ROOT' , 'tow.dev:8888');
+define('SITE_ROOT' , 'tow.dev');
 
 spl_autoload_register(function () {
        require_once $_SERVER['DOCUMENT_ROOT']."/model/User.php";
@@ -36,4 +36,3 @@ $conn = new PDO("mysql:host=$host;dbname=$db",$user,$pass);
 /**
  * Define any other config option you may want to use
 */
-?>
