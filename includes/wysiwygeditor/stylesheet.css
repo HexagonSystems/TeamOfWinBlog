@@ -41,9 +41,10 @@ textarea:focus {
   background-image: -ms-linear-gradient(bottom, rgb(240,240,240) 0%, rgb(250,250,250) 100%);
   /*box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.3);*/
 }
+
 [data-wysihtml5-command],
 [data-wysihtml5-action],
-.fore-color {
+.fore-color{
   position: relative;
   border-right: 1px solid #ddd;
   border-left: 1px solid #fff;
@@ -53,6 +54,33 @@ textarea:focus {
   cursor: pointer;
   height: 40px;
   width: 68px;
+}
+
+.save {
+  position: relative;
+  list-style: none;
+  display: inline;
+}
+.save input{
+  font-size: 12px;
+  display: block;
+  cursor: pointer;
+  height: 40px;
+  width: 68px;
+  float:right;
+  text-align: center;
+  border-right: 1px solid #ddd;
+  border-left: 1px solid #fff;
+  font-weight: bold;
+  margin: 0;
+  background: #f6f6f6;
+  background-image: linear-gradient(bottom, rgb(240,240,240) 0%, rgb(250,250,250) 100%);
+  background-image: -o-linear-gradient(bottom, rgb(240,240,240) 0%, rgb(250,250,250) 100%);
+  background-image: -moz-linear-gradient(bottom, rgb(240,240,240) 0%, rgb(250,250,250) 100%);
+  background-image: -webkit-linear-gradient(bottom, rgb(240,240,240) 0%, rgb(250,250,250) 100%);
+  background-image: -ms-linear-gradient(bottom, rgb(240,240,240) 0%, rgb(250,250,250) 100%);
+  border-bottom: none;
+  border-top: none;
 }
 
 [data-wysihtml5-command]:after,

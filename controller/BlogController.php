@@ -1,25 +1,21 @@
 <?php
-
-require_once 'model/Post.php';
 class BlogController
 {
-    private $model;
     private $template;
-    private $header;
     private $footer;
-    private $comments;
     private $blog;
     private $nav;
     private $conn;
 
-    private $loggedOutView = 'BlogView';
-    private $loggedInView = 'loggedInView';
+    private $view = 'BlogView';
 
     public function __construct()
     {
-        $this->header = 'includes/header.php';
         $this->footer = 'includes/footer.php';
         $this->nav = 'includes/nav.php';
+        include_once('controller/HeadController.php');
+        $this->nav = new HeadController();
+        $this->nav->invoke();
 
     } //end constructor
     public function setDatabase(PDO $conn)
@@ -36,10 +32,10 @@ class BlogController
 
             $this->blog = $post;
 
-            $this->template = 'view/'.$this->loggedOutView.'Template.php';
-            include_once('view/'.$this->loggedOutView.'.php');
+            $this->template = 'view/'.$this->view.'Template.php';
+            include_once('view/'.$this->view.'.php');
             //create a new view and pass it our template
-            $view = new BlogView($this->template,$this->header,$this->footer,$this->nav,$this->blog);
+            $view = new BlogView($this->template,$this->footer,$this->blog);
         }
     }
 } //end class

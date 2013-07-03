@@ -15,6 +15,7 @@ class Post extends Article
             $statement = "SELECT `postid`, `title`, `displayStatus`, `content`, `creationDate`, `username` 
                     FROM `posts`
                     WHERE `displayStatus` = 'published'
+                    ORDER BY  `creationDate` DESC 
                     LIMIT :startPost, :endPost";
 
             $query = $this->database->prepare($statement);
@@ -88,6 +89,7 @@ class Post extends Article
      */
     public function create($post = array())
     {
+        //'title' => '', 'displayStatus' => '', 'ACL' => '', 'content' => '', 'username' => ''
         if (empty($post)) {
 
             throw new Exception('Create requires an Array of values');
@@ -133,7 +135,9 @@ class Post extends Article
         };
 
         $this->setPostid($this->database->lastInsertId());
-
+        
+        $this->load($this->getPostid());
+        var_dump($this);
         return(true);
     }
 

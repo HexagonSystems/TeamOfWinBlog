@@ -1,16 +1,12 @@
 <?php
-
-require_once 'model/User.php';
 class LoginController
 {
-    private $model;
     private $template;
     private $footer;
     private $nav;
     private $conn;
 
     private $loggedOutView = 'loginView';
-    private $loggedInView = 'loggedInView';
 
     public function __construct(PDO $conn)
     {
@@ -87,9 +83,5 @@ class LoginController
                 echo "failed";
             }
         }
-        {
-
-        }
-
     } // end function
-} //end class
+}

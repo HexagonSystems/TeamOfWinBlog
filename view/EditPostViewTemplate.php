@@ -1,5 +1,5 @@
 <header><?=$title ?> Post</header>
-<form action="index.php?location=registerPage&action=changepassword" method="POST">
+<form action="index.php?location=postPage&action=publishPost" method="post">
     <label>Title <input type="text" placeholder="Put a kick-ass title" name="title"></label>
     <label>Content
   <div class="wysihtml5">
@@ -28,6 +28,8 @@
             </ul>
           </li>
           <li data-wysihtml5-action="change_view" title="Show HTML" class="action"></li>
+          <li title="Save Post" class="save"><input type="submit" value="Submit" /></li>
+          <li title="Cancel Post" class="save"><input type="reset" value="Cancel" /></li>
         </ul>
       </header>
       <div data-wysihtml5-dialog="createLink" style="display: none;">
@@ -46,10 +48,10 @@
         <a data-wysihtml5-dialog-action="save">OK</a>&nbsp;<a data-wysihtml5-dialog-action="cancel">Cancel</a>
       </div>
     </div>
-        <textarea id="wysihtml5-editor" spellcheck="false" wrap="off" autofocus placeholder="Enter something ...">
+        <textarea name="content" id="wysihtml5-editor" spellcheck="false" wrap="off" autofocus placeholder="Enter something ...">
           </textarea>
         </div>
-
+</form>
         <script>
         var editor = new wysihtml5.Editor("wysihtml5-editor", {
           toolbar:     "wysihtml5-editor-toolbar",

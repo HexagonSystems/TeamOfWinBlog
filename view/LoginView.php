@@ -12,9 +12,7 @@ class LoginView
      * Holds render status of view.
     */
     private $render = FALSE;
-    private $header = FALSE;
     private $footer = FALSE;
-    private $nav = FALSE;
     /**
      * Accept a template to load
      */
