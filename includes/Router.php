@@ -11,11 +11,11 @@ class Router
     {
         $getVars = $_GET;
         
-        $cookieMonster = new CookieMonster();
-        
-        $cookieMonster->setDatabase($conn);
-        
-        $cookieMonster->lookForCookies();
+//        $cookieMonster = new CookieMonster();
+//        
+//        $cookieMonster->setDatabase($conn);
+//        
+//        $cookieMonster->lookForCookies();
         
         $page = isset($getVars['location']) ? $getVars['location'] : 'empty';
 
