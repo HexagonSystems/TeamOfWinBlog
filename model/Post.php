@@ -12,9 +12,9 @@ class Post extends Article
     public function getPosts($startPost, $endPost)
     {
         try {
-            $statement = "SELECT postId, title, status, content, date, username
-                    FROM`posts`
-                    WHERE`status`='published'
+            $statement = "SELECT `postid`, `title`, `displayStatus`, `content`, `creationDate`, `username` 
+                    FROM `posts`
+                    WHERE `displayStatus` = 'published'
                     LIMIT :startPost, :endPost";
 
             $query = $this->database->prepare($statement);
@@ -29,11 +29,11 @@ class Post extends Article
             foreach ($query as $row) {
                 $tempObject = new Post();
 
-                $tempObject->setPostid($row['postId']);
+                $tempObject->setPostid($row['postid']);
                 $tempObject->setTitle($row['title']);
-                $tempObject->setStatus($row['status']);
+                $tempObject->setStatus($row['displayStatus']);
                 $tempObject->setContent($row['content']);
-                $tempObject->setDate($row['date']);
+                $tempObject->setDate($row['creationDate']);
                 $tempObject->setUsername($row['username']);
 
                 $arrayOfPosts[$tempObject->getPostid()] = $tempObject;

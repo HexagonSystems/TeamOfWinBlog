@@ -107,7 +107,7 @@ class Article
 
     public function setDate($param)
     {
-        $this->article['date'] = $param;
+        $this->article['creationDate'] = $param;
     }
 
     public function setUsername($param)
@@ -118,7 +118,7 @@ class Article
     //*********GETTERS--------------
     public function getStatus()
     {
-        return($this->article['status']);
+        return($this->article['displayStatus']);
     }
 
     public function getACL()
@@ -133,7 +133,7 @@ class Article
 
     public function getDate()
     {
-        return($this->article['date']);
+        return($this->article['creationDate']);
     }
 
     public function getUsername()
