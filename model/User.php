@@ -1,8 +1,4 @@
 <?php
-
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-
 class User
 {
     private $database;
@@ -19,18 +15,18 @@ class User
      * @param  Array  $userArray Optional must contain a key of "new" or "login" needs "username", "password" [, "email", "accessLevel"]
      * @return Object or String returns this object
      */
-    public function __construct( PDO $database, $userArray = array('') )
+    public function __construct(PDO $database, $userArray = array(''))
     {
 
         $this->database = $database;
 
-        if ( isset($userArray["new"]) ) {
+        if (isset($userArray["new"])) {
 
             $this->createUser($userArray["username"], $userArray["password"], $userArray["email"], $userArray["accessLevel"]);
 
             return($this);
 
-        } elseif (isset($userArray["login"]) ) {
+        } elseif (isset($userArray["login"])) {
 
             $this->loginUser($userArray["username"], $userArray["password"]);
 
@@ -95,7 +91,7 @@ class User
             $user = $this->database->query("select username from users where username = '$username'")->fetch();
 
         } catch (Exception $e) {
-            throw new Exception( 'Database error:', 0, $e);
+            throw new Exception('Database error:', 0, $e);
 
             return;
         };
@@ -109,21 +105,21 @@ class User
     }// end checkUsername
 
     /**
-     * Tests if email exists in Database
-     * Can be used to check the user has the right email or check the user isn't trying to
-     * register an email that already exists
-     * @param  String    $email
-     * @return String    either "Email found" or "Email not found"
+     * Tests data exists in user in the Database
+     * @param String $data the value we're searching for
+     * @param String $type the field we're checking
+     * @return String 'Data (not) found'
      * @throws Exception
+     * @deprecated since version 1 Removed for sercurity reason will throw warnings
      */
     public function checkExists($data, $type)
     {
-
+        throw new Exception("Warning! Deprecated function", 500);
         try {
             $user = $this->database->query("select $type from users where $type = '$data'")->fetch();
 
         } catch (Exception $e) {
-            throw new Exception( 'Database error:', 0, $e);
+            throw new Exception('Database error:', 0, $e);
 
             return;
         };
@@ -134,16 +130,23 @@ class User
             return("Data not found");
         }
 
-    }// end checkUsername
+    }// end checkExists
 
+    /**
+     * Tests if email exists in Database
+     * Can be used to check the user has the right email or check the user isn't trying to
+     * register an email that already exists
+     * @param  String    $email
+     * @return String    either "Email found" or "Email not found"
+     * @throws Exception
+     */
     public function checkEmail($email)
     {
-
         try {
-            $user = $this->database->query("select * from users where email = '$email'")->fetch();
+            $user = $this->database->query("select email from users where email = '$email'")->fetch();
 
         } catch (Exception $e) {
-            throw new Exception( 'Database error:', 0, $e);
+            throw new Exception('Database error:', 0, $e);
 
             return;
         };
@@ -193,13 +196,10 @@ class User
             $user = $this->database->query("select * from users where username = '$username'")->fetch();
 
         } catch (Exception $e) {
-            throw new Exception( 'Database error:', 0, $e);
+            throw new Exception('Database error:', 0, $e);
 
             return;
         };
-
-        //map the single row to be the whole array
-        //$user = $user[0];
 
         //Set the password
         $this->setPassword($user["userPassword"], "old");
@@ -223,12 +223,12 @@ class User
         return($this);
 
     }//end loginUser
-         public function updateEmail($username, $email, $password, $accessLevel)
+    
+    public function updateEmail($username, $email, $password, $accessLevel)
     {
 
         $user = $this->database->query("select * from users where username = '$username'")->fetch();
         //check email
-
 
         //Set the password
         $this->setPassword($user["userPassword"], "old");
@@ -244,56 +244,49 @@ class User
 
                 $this->setEmail($email);
 
-            } else {
-                return($this->checkEmail($email));
-            }
+        } else {
+            return($this->checkEmail($email));
+        }
 
-            try { // get new rate
+        try { // get new rate
             // change old rate to new rate where state name == state name
 
-                $sql = '
-                    UPDATE users
-                    SET	email = :email
-                    WHERE username = :username';
-                $s = $this->database->prepare($sql);
-                $s->bindValue(':email', $email);
-                $s->bindValue(':username', $username);
-                $s->execute();
-            } catch (PDOException $e) {
-                echo $e->getMessage();
-                exit();
-            }
+            $sql = '
+                UPDATE users
+                SET    email = :email
+                WHERE  username = :username';
+            $s = $this->database->prepare($sql);
+           $query->bindValue(':email', $email);
+           $query->bindValue(':username', $username);
+           $query->execute();
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return;
+        }
 
         return($this);
     }
 
-             public function updateAccessLevel($username, $ACL)
+    public function updateAccessLevel($username, $ACL)
     {
-            try { // get new rate
+        try { // get new rate
             // change old rate to new rate where state name == state name
-
-                $sql = '
-                    UPDATE users
-                    SET	ACL = :ACL
-                    WHERE username = :username';
-                $s = $this->database->prepare($sql);
-                $s->bindValue(':ACL', $ACL);
-                $s->bindValue(':username', $username);
-                $s->execute();
-            } catch (PDOException $e) {
-                echo $e->getMessage();
-                exit();
-            }
+            $sql = '
+                UPDATE users
+                SET    ACL = :ACL
+                WHERE  username = :username';
+            $s = $this->database->prepare($sql);
+           $query->bindValue(':ACL', $ACL);
+           $query->bindValue(':username', $username);
+           $query->execute();
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return;
+        }
 
         return($this);
     }
 
-    /**
-     * Save user to database
-     *
-     * @todo Get this working correctly the current INSERT is in correct
-     * @return string - Either error messages or saved
-     */
     /**
      * Save user to database
      *
@@ -302,27 +295,48 @@ class User
      */
     public function save()
     {
-        try {
+        if($this->checkUsername($this->getUsername()) === 'Username found'){
+            try {
+                $sql = '
+                    UPDATE `users`
+                    SET    `ACL` = :ACL, `username` = :username, `email` = :email, `userPassword` = :userPassword
+                    WHERE  `username` = :username';
+               $query = $this->database->prepare($sql);
+               $query->execute(
+                    array(':username' => $this->getUsername()
+                        , ':email' => $this->getEmail()
+                        , ':userPassword' => $this->getPassword()
+                        , ':ACL' => $this->getAccessLevel()
+                   )
+               );
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                return;
+            }
+        }else{
+        
+            try {
 
-            $statement = "INSERT INTO `users` (`username`, `email`, `userPassword`, `ACL`)
-                                       VALUES (:username, :email, :userPassword, :ACL)";
+                $statement = "INSERT INTO `users` (`username`, `email`, `userPassword`, `ACL`)
+                                           VALUES (:username, :email, :userPassword, :ACL)";
 
-            $statement = $this->database->prepare($statement);
+                $query = $this->database->prepare($statement);
 
-            $statement->execute(
-                array(':username' => $this->getUsername()
-                    , ':email' => $this->getEmail()
-                    , ':userPassword' => $this->getPassword()
-                    , ':ACL' => $this->getAccessLevel()
-                )
-            );
+                $query->execute(
+                    array(':username' => $this->getUsername()
+                        , ':email' => $this->getEmail()
+                        , ':userPassword' => $this->getPassword()
+                        , ':ACL' => $this->getAccessLevel()
+                   )
+                );
 
-        } catch (Exception $e) {
-            throw new Exception( 'Database error:', 0, $e);
+            } catch (Exception $e) {
+                throw new Exception('Database error:', 0, $e);
 
-            return;
+                return;
+            };
         };
-
+        
         return("saved");
     }
 
@@ -339,7 +353,7 @@ class User
             $user = $this->database->query("select * from users where username = '$username'")->fetch();
 
         } catch (Exception $e) {
-            throw new Exception( 'Database error:', 0, $e);
+            throw new Exception('Database error:', 0, $e);
 
             return;
         };
@@ -424,13 +438,14 @@ class User
         $this->lastLogin = date('Y-m-d H:i:s');
         $this->save();
     }
+    
     public function getlastLogin($username = null)
     {
         if ($username != null) {
             try {
                 $user = $this->database->query("select lastLoginDate from users where username = '$username'")->fetch();
             } catch (Exception $e) {
-                throw new Exception( 'Database error:', 0, $e);
+                throw new Exception('Database error:', 0, $e);
 
                 return;
             };
@@ -459,14 +474,13 @@ class User
     {
         try {
 
-            //$statement = "SELECT username FROM users WHERE ACL <10";
             $statement = $this->database->query("select username, ACL FROM users WHERE ACL < 10")->fetchAll();
             //$statement = $this->database->prepare($statement);
 
             //$result = $statement->execute();
 
         } catch (Exception $e) {
-            throw new Exception( 'Database error:', 0, $e);
+            throw new Exception('Database error:', 0, $e);
 
             return ;
         };
@@ -494,13 +508,13 @@ class User
 
     public function __sleep()
     {
-        return array( 'username'
+        return array('username'
                     , 'password'
                     , 'email'
                     , 'firstLogin'
                     , 'lastLogin'
                     , 'accessLevel'
-                    );
+                   );
     }
 
     public function setDatabase(PDO $database)

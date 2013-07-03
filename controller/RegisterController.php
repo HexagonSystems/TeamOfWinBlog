@@ -1,16 +1,14 @@
 <?php
-session_start();
+
 require_once 'model/User.php';
 class RegisterController
 {
-    private $model;
     private $template;
     private $footer;
     private $nav;
     private $conn;
 
     private $loggedOutView = 'RegisterView';
-    private $loggedInView = 'loggedInView';
 
     public function __construct(PDO $conn)
     {
@@ -39,8 +37,8 @@ class RegisterController
                     if (!is_a($user, 'User')) {
                         //NOt logged In
                         echo $user."TESTING";
-                        $this->template = 'view/'.$this->$loggedOutView.'Template.php';
-                        include_once('view/'.$this->$loggedOutView.'.php');
+                        $this->template = 'view/'.$this->loggedOutView.'Template.php';
+                        include_once('view/'.$this->loggedOutView.'.php');
                         //create a new view and pass it our template
                         $view = new RegisterView($this->template,$this->header,$this->footer,$this->nav);
                         $content ="";
@@ -53,8 +51,8 @@ class RegisterController
                     //if $_POSTs arn't set
                     //NOt logged In
                     echo "Post not set";
-                    $this->template = 'view/'.$this->$loggedOutView.'Template.php';
-                    include_once('view/'.$this->$loggedOutView.'.php');
+                    $this->template = 'view/'.$this->loggedOutView.'Template.php';
+                    include_once('view/'.$this->loggedOutView.'.php');
                     //create a new view and pass it our template
                     $view = new RegisterView($this->template,$this->header,$this->footer,$this->nav);
                     $content ="";
@@ -86,9 +84,5 @@ class RegisterController
                 echo "failed";
             }
         }
-        {
-
-        }
-
     } // end function
 } //end class
