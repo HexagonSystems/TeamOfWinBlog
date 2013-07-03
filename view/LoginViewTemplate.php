@@ -20,6 +20,6 @@
 	</form>
 </article>
 <article>
-	<span class="title">Forgotten your password? <a href="index.php?location=loginPage&action=forgotPassword">Click Here</a></span>
-	<a href="index.php?location=registerPage" class="title">Don't have an account? Click here to get started!</a>
+	| <span class="title">Forgotten your password? <a href="index.php?location=loginPage&action=forgotPassword">Click Here</a></span> | 
+	<a href="index.php?location=registerPage" class="title">Don't have an account? Click here to get started!</a> |
 </article>
