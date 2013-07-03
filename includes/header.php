@@ -12,6 +12,6 @@
 </head>
 <!-- the body section -->
 <body>
-	<div class="container">
-		<header class="topabsolute fix clearfix">
-			<h1>TOW Blog Website 02</h1>
+    <div class="container">
+        <header class="topabsolute fix clearfix">
+            <h1>TOW Blog Website 02</h1>

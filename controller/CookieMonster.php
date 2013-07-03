@@ -49,9 +49,9 @@ class CookieMonster
     private function eatCookie($cookie)
     {
         $lastLogin = $this->user->getlastLogin($cookie['username']);
-        
+
         $hash = $this->bakeCookie($cookie['username'],$lastLogin);
-        
+
         echo 'nhash:= '.$hash.'<br>';
         echo 'chash:- '.$cookie['hash'];
         if ($hash === $cookie['hash']) {
@@ -62,7 +62,7 @@ class CookieMonster
 
     }
 
-    public function giveCookie(User $user)           
+    public function giveCookie(User $user)
     {
         $hash = $this->bakeCookie($user->getUsername(),$user->getlastLogin());
 

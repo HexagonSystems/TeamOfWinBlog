@@ -3,11 +3,11 @@
 
 <!-- Footer -->
 <footer class="bottomabsolute fix">
-	<article class="copyright">
-		&copy;
-		Team Of Win
-		2013
-	</article>
+    <article class="copyright">
+        &copy;
+        Team Of Win
+        2013
+    </article>
 </footer>
 </div>
 <!-- end page -->

@@ -13,7 +13,7 @@ class IndexController
     public function __construct()
     {
         $this->footer = 'includes/footer.php';
-        include_once 'controller/HeadController.php';
+        include_once('controller/HeadController.php');
         $this->nav = new HeadController();
         $this->nav ->invoke();
     } //end constructor

@@ -8,50 +8,47 @@
 
 class Post extends Article
 {
-	
-	public function getPosts($startPost, $endPost)
-	{
-		try
-		{
-			$statement = "SELECT postId, title, status, content, date, username
-	    			FROM`posts`
-	    			WHERE`status`='published'
-	    			LIMIT :startPost, :endPost";
-			 
-			$query = $this->database->prepare($statement);
-			 
-			$query->bindParam(':startPost'   , $startPost , PDO::PARAM_INT);
-			$query->bindParam(':endPost'  	 , $endPost   , PDO::PARAM_INT);
-			 
-			$query->execute();
-			 
-			$arrayOfPosts = array();
-	
-			foreach($query as $row){
-				$tempObject = new Post();
-				 
-				$tempObject->setPostid($row['postId']);
-				$tempObject->setTitle($row['title']);
-				$tempObject->setStatus($row['status']);
-				$tempObject->setContent($row['content']);
-				$tempObject->setDate($row['date']);
-				$tempObject->setUsername($row['username']);
-				 
-				$arrayOfPosts[$tempObject->getPostid()] = $tempObject;
-				 
-			}
-			 
-			//print_r($arrayOfPosts);
-	
-			return $arrayOfPosts;
-		}
-		catch(PDOException $e)
-		{
-			echo $e;
-			return false;
-		}
-	}
-	
+
+    public function getPosts($startPost, $endPost)
+    {
+        try {
+            $statement = "SELECT postId, title, status, content, date, username
+                    FROM`posts`
+                    WHERE`status`='published'
+                    LIMIT :startPost, :endPost";
+
+            $query = $this->database->prepare($statement);
+
+            $query->bindParam(':startPost'   , $startPost , PDO::PARAM_INT);
+            $query->bindParam(':endPost'  	 , $endPost   , PDO::PARAM_INT);
+
+            $query->execute();
+
+            $arrayOfPosts = array();
+
+            foreach ($query as $row) {
+                $tempObject = new Post();
+
+                $tempObject->setPostid($row['postId']);
+                $tempObject->setTitle($row['title']);
+                $tempObject->setStatus($row['status']);
+                $tempObject->setContent($row['content']);
+                $tempObject->setDate($row['date']);
+                $tempObject->setUsername($row['username']);
+
+                $arrayOfPosts[$tempObject->getPostid()] = $tempObject;
+
+            }
+
+            //print_r($arrayOfPosts);
+            return $arrayOfPosts;
+        } catch (PDOException $e) {
+            echo $e;
+
+            return false;
+        }
+    }
+
     /**
      * Loads an existing post from the database
      *
@@ -65,7 +62,7 @@ class Post extends Article
 
         try {
             $statement = "SELECT * FROM `posts` WHERE `postid` = '$id'";
-            
+
             $post = $this->database->query($statement)->fetch(PDO::FETCH_ASSOC);
 
         } catch (Exception $e) {
@@ -97,7 +94,7 @@ class Post extends Article
 
             return(false);
         };
-        
+
         //The keys we require
         $keys = array('title', 'displayStatus', 'ACL', 'content', 'username');
 
@@ -134,12 +131,12 @@ class Post extends Article
 
             return(false);
         };
-        
+
         $this->setPostid($this->database->lastInsertId());
 
         return(true);
     }
-    
+
     /**
      * Uses the super cool on duplicate key update MySQL function to update an existing post
      * @return Boolean   True on sucess else false
@@ -171,8 +168,8 @@ class Post extends Article
 
     /**
      * Deletes the current post from the database
-     * 
-     * @return Boolean Sucess or failure
+     *
+     * @return Boolean   Sucess or failure
      * @throws Exception Database exceptions if query fails
      */
     public function delete()
