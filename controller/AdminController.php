@@ -23,26 +23,42 @@ class AdminController
 	{
 		if (!isset($_GET['action']))
 		{
+			
+			$user = new User($this->conn);
+			$data = $user->displayUsers();
+			
 			$this->template = 'view/'.$this->fileName.'Template.php';
 			include_once('view/'.$this->fileName.'.php');
 			//create a new view and pass it our template
 			$view = new AdminView($this->template,$this->footer);
-			$content ="";
+			//$content ="$data";
 			//$view->assign('title' , 'Loggged in');
-			//$view->assign('content' , $content);
+			$view->assign('content' , $data);
+			
+
 		}elseif (isset($_GET['action'])){
-			if($_GET['action'] == '')
+		$user = new User($this->conn);
+			if($_GET['action'] == 'suspendUser')
 			{
-				$user = new User($this->conn);
-				if(isset($_POST['']))
+				var_dump($_POST);
+				//$user = $user->updateAccessLevel($_POST["username"], 1);
+				if ($_GET['username'])
 				{
-					
+					$user->updateAccessLevel($_GET['username'], 1);
+					header("Location: index.php?location=adminPage");
 				}
 			}
-		}
-		{
+			if($_GET['action'] == 'unsuspendUser')
+			{
+				if ($_GET['username'])
+				{
+					$user->updateAccessLevel($_GET['username'], 5);
+					header("Location: index.php?location=adminPage");
+				}
+				
+			}
+			
 			
 		}
-
 	} // end function
 } //end class

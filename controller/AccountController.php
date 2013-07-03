@@ -18,6 +18,8 @@ class AccountController
 		$this->nav ->invoke();
 		$this->conn = $conn;
 		
+		
+		
 	} //end constructor
 	public function invoke()
 	{
@@ -38,9 +40,17 @@ class AccountController
 			if($_GET['action'] == 'changeemail')
 			{
 				$user = new User($this->conn);
-				if(isset($_POST['']))
+				if(isset($_POST['pass']) && isset($_POST['email']))
 				{
-					
+					$user = $user->updateEmail($_SESSION['account']['username'],$_POST["email"],$_POST["pass"],$_SESSION['account']['access']);
+					//$user = $user->save();
+					$this->template = 'view/'.$this->fileName.'Template.php';
+					include_once('view/'.$this->fileName.'.php');
+					//create a new view and pass it our template
+					$view = new AccountView($this->template,$this->footer);
+					$content ="";
+					//$view->assign('title' , 'Loggged in');
+					//$view->assign('content' , $content);
 				}
 			}
 			else if($_GET['action'] == 'changepassword')

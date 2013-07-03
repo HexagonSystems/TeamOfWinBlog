@@ -38,6 +38,9 @@ class AdminView
 			$this->footer = $footer;
 		}
 	}
+	
+	
+	
 	/*** Receives assignments from controller and stores in local data array
 	 *
 	* @param $variable
