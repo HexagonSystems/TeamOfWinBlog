@@ -207,21 +207,182 @@ class User
 			//Else errors
 			return("Password Incorrect");
 		};
-			
-		$this->setUsername($user["username"]);
-
-		$this->setEmail($user["email"]);
-
-		//$this->firstLogin = $firstLogin;
-		$this->setLastLogin();
-		$_SESSION['activeUser'] = $this->getUsername();
-
+		
 		$this->setAccessLevel($user['ACL']);
+		
+		switch($user['ACL'])
+		{
+		case 1:
+			//Else errors
+			return("verify");
+			break;
+		case 2:
+			return("User Is Suspended");
+			break;
+		case 5:
+			$this->setUsername($user["username"]);
+			
+			$this->setEmail($user["email"]);
+			
+			//$this->firstLogin = $firstLogin;
+			$this->setLastLogin();
+			$_SESSION['activeUser'] = $this->getUsername();
+			
+			//If success return this object
+			return($this);
+			break;
+		};
 
-		//If success return this object
-		return($this);
+		
+		
 
 	}//end loginUser
+	
+	public function automaticLogin($username, $session = true) {
+		 
+		if ($this->checkUsername($username) == "Username not found") {
+			return("Username not found");
+		}
+	
+		//Collect User from the database
+		try {
+			//returns multidemnsional array
+			$user = $this->database->query("select * from users where username = '$username'")->fetch();
+	
+		} catch (Exception $e) {
+			throw new Exception( 'Database error:', 0, $e);
+	
+			return;
+		};
+	
+		//Set the password
+		$this->setPassword($user["userPassword"], "old");
+	
+		$this->setUsername($user["username"]);
+	
+		$this->setEmail($user["email"]);
+	
+		$this->setLastLogin();
+		 
+		if($session){
+			$this->sessionCreate();
+		}
+		 
+		$this->setAccessLevel($user['ACL']);
+	
+		//If success return this object
+		return($this);
+	}
+	
+	public function getUsernameFromEmail($email){
+		if($this->checkEmail($email) == "Email not found") {
+			return false;
+		}
+		
+		//Collect User from the database
+		try {
+			//returns multidemnsional array
+			$query = "select username from users where email = :email LIMIT 1";
+			$resultSet = $this->database->prepare($query);
+			$resultSet->bindParam(':email'	, $email	 , PDO::PARAM_STR);
+			$resultSet->execute();
+			
+			if($resultSet)
+			{
+				if($resultSet->rowCount())
+				{
+					$row = $resultSet->fetch();
+					return $row['username'];
+				}else
+				{
+					return false;
+				}
+			}else
+			{
+				return false;
+			}
+		
+		} catch (Exception $e) {
+			throw new Exception( 'Database error:', 0, $e);
+		
+			return false;
+		};
+	}
+	
+	public function getEmailFromUsername($username){
+		if($this->checkUsername($username) == "Username not found") {
+			return false;
+		}
+	
+		//Collect User from the database
+		try {
+			//returns multidemnsional array
+			$query = "select `email` from `users` where `username` = :username LIMIT 1";
+			$resultSet = $this->database->prepare($query);
+			$resultSet->bindParam(':username'	, $username	 , PDO::PARAM_STR);
+			$resultSet->execute();
+				
+			if($resultSet)
+			{
+				if($resultSet->rowCount())
+				{
+					$row = $resultSet->fetch();
+					return $row['email'];
+				}else
+				{
+					return false;
+				}
+			}else
+			{
+				return false;
+			}
+	
+		} catch (Exception $e) {
+			throw new Exception( 'Database error:', 0, $e);
+	
+			return false;
+		};
+	}
+	
+	public function updateUser(){
+		
+		$query = "UPDATE `users` SET 
+					`email` = :email, 
+					`userPassword` = :password, 
+					`ACL` = :acl, 
+					`lastLoginDate` = :lastLoginDate 
+					WHERE `username` = :username";
+		
+		$email			= $this->getEmail();
+		$password		= $this->getPassword();
+		$acl			= $this->getAccessLevel();
+		$lastLoginDate	= $this->getlastLogin();
+		$username		= $this->getUsername();
+		
+		
+		$resultSet = $this->database->prepare($query);
+		$resultSet->bindParam(':email'			,	$email			, PDO::PARAM_STR);
+		$resultSet->bindParam(':password'		,	$password		, PDO::PARAM_STR);
+		$resultSet->bindParam(':acl'			, 	$acl			, PDO::PARAM_INT);
+		$resultSet->bindParam(':lastLoginDate'	,	$lastLoginDate	, PDO::PARAM_STR);
+		$resultSet->bindParam(':username'		, 	$username		, PDO::PARAM_STR);
+		
+		try{
+			$resultSet->execute();
+		}catch(Exception $e){
+			return "Something went wrong";
+		}
+		
+		if($resultSet)
+		{
+			return "Updated";
+		}else
+		{
+			return "Something went wrong";
+		}
+		
+		
+	}
 
 	/**
 	 * Save user to database

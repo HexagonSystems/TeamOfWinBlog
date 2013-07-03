@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'model/User.php';
+require_once 'controller/VerifyController.php';
 class RegisterController
 {
 	private $model;
@@ -45,13 +46,13 @@ class RegisterController
 						$this->template = 'view/'.$this->$loggedOutView.'Template.php';
 						include_once('view/'.$this->$loggedOutView.'.php');
 						//create a new view and pass it our template
-						$view = new RegisterView($this->template,$this->header,$this->footer,$this->nav);
+						$view = new RegisterView($this->template,$this->footer);
 						$content ="";
 						$view->assign('title' , 'Loggged in');
 						$view->assign('content' , $content);
 					}else
 					{
-						echo $user->getEmail();
+						
 					}
 				}else
 				{
@@ -61,7 +62,7 @@ class RegisterController
 					$this->template = 'view/'.$this->$loggedOutView.'Template.php';
 					include_once('view/'.$this->$loggedOutView.'.php');
 					//create a new view and pass it our template
-					$view = new RegisterView($this->template,$this->header,$this->footer,$this->nav);
+					$view = new RegisterView($this->template,$this->footer);
 					$content ="";
 					$view->assign('title' , 'Loggged in');
 					$view->assign('content' , $content);
@@ -78,15 +79,23 @@ class RegisterController
 						$this->template = 'view/'.$this->loggedOutView.'Template.php';
 						include_once('view/'.$this->loggedOutView.'.php');
 						//create a new view and pass it our template
-						$view = new RegisterView($this->template,$this->header,$this->footer,$this->nav,$user);
+						$view = new RegisterView($this->template,$this->footer);
 						$content ="";
 						$view->message('error', $user);
 						$view->assign('title' , 'Loggged in');
 						$view->assign('content' , $content);
+
 					}else
 					{
-						echo $user->save();
-						echo "TESTING";
+						if($user->save() === "saved"){
+							$get = array("action" => "mailSent");
+							$verify = new VerifyController($get, $_POST);
+							$verify->setDatabase($this->conn);
+							$verify->invoke();
+						}else{
+							echo "Something went wrong";
+						}
+						
 						
 					}
 				}

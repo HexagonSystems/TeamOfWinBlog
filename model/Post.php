@@ -13,7 +13,7 @@ class Post extends Article
 	{
 		try
 		{
-			$statement = "SELECT postId, title, status, content, date, username
+			$statement = "SELECT postId, title, status, LEFT(content, 1000) AS content, date, username
 	    			FROM`posts`
 	    			WHERE`status`='published'
 	    			LIMIT :startPost, :endPost";

@@ -32,6 +32,12 @@ class Router
                 $controller = new AccountController($conn);
 							$controller->invoke();
                 break;
+          	case "verify":
+                	include_once 'controller/VerifyController.php';
+                	$controller = new VerifyController();
+                	$controller->setDatabase($conn);
+                	$controller->invoke();
+                	break;
 			case "navPage":
                 include_once 'controller/NavController.php';
                 $controller = new NavController($conn);

@@ -8,6 +8,7 @@ ini_set('display_errors', '1');
  */
 require_once('config/config.php');
 include_once("includes/Router.php");
+require_once('includes/password.php');
 Router::route($conn);
 
 ?>

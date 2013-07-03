@@ -12,9 +12,7 @@ class RegisterView
 	 * Holds render status of view.
 	*/
 	private $render = FALSE;
-	private $header = FALSE;
 	private $footer = FALSE;
-	private $nav = FALSE;
 	private $message = FALSE;
 	/**
 	 * Accept a template to load

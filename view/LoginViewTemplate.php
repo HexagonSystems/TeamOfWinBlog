@@ -1,11 +1,5 @@
-<link rel="stylesheet" type="text/css" href="includes/css/loginView.css" />
-<script
-	src="includes/js/register_formValidation.js"></script>
-<script
-	src="includes/js/register_passValidation.js"></script>
-
 <article id="loginBox">
-	<span class="title">Login</span>
+	<h3>Login</h3>
 	<form action="index.php?location=loginPage&action=login" method="POST">
 		<ul>
 			<!-- Username -->
@@ -19,12 +13,13 @@
 			</li>
 			
 			<li>
-				<input type="submit" value="Login">
+				<input type="submit" class="enabledButton" value="Login">
 			</li>
 		</ul>
+		<input type="hidden" value="registerAccount" name="action">
 	</form>
 </article>
 <article>
-	<span class="title">Forgotten your password? Click Here</span>
+	<span class="title">Forgotten your password? <a href="index.php?location=loginPage&action=forgotPassword">Click Here</a></span>
 	<a href="index.php?location=registerPage" class="title">Don't have an account? Click here to get started!</a>
 </article>

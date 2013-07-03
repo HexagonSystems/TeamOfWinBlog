@@ -1,5 +1,5 @@
 <article id="registerBox">
-	<span class="title">Create your account</span>
+	<h3>Create your account</h3>
 	<form action="index.php?location=registerPage&action=register"
 		method="POST">
 		<ul>
@@ -42,6 +42,7 @@
 					</ul>
 
 				</div></li>
+				<input type="hidden" value="registerAccount" name="action">
 			<li id="submitBox">
 				<span>
 					<?php	
