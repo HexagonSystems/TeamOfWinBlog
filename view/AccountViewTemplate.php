@@ -1,5 +1,5 @@
 <header>Account</header>
-<form action="index.php?location=registerPage&action=changeemail" method="POST">
+<form action="index.php?location=accountPage&action=changeemail" method="POST">
 	<input type="text" placeholder="New Email" name="email"><br />
 	<input type="password" placeholder="Password" name="pass"><br />
 	<input type="submit" value="Change Email">

@@ -1,9 +1,23 @@
 <header>Admin</header>
 <form action="index.php?location=registerPage&action=" method="POST">
-	
-	<input type="text" placeholder="Admin" name="username"><br />
-	<!--Needs to be changed in accordance to page layout and how it functions-->
-
-	<input type="submit" value="Submit">
 </form>
 
+<br />
+
+<table border="1">
+<th colspan="3">Users</th>
+
+<?php foreach ($data['content'] as $row): ?>
+
+<tr>
+
+<td><?php echo $row['username']; ?></td>
+
+<td><a href="index.php?location=adminPage&action=suspendUser&username=<?php echo $row['username']; ?>">Suspend</a></td>
+
+<td><a href="index.php?location=adminPage&action=unsuspendUser&username=<?php echo $row['username']; ?>">Unsuspend</a></td>
+
+</tr>
+
+<?php endforeach; ?>
+</table>

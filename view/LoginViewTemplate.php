@@ -9,15 +9,17 @@
 
 			<!-- Password -->
 			<li><input type="password" placeholder="Password" name="pass"
-				id="register_pass" size=30>
+				id="register_pass" size=30></li>
+			<input type="checkbox" name="keeploggedin" value="log" text=""> Keep Logged In
 			
-			<li><input type="submit" value="Login"></li
+			
+			<li><input type="submit" value="Login"></li>
 		
 		</ul>
 	</form>
 </article>
 <article>
-	<span class="title">Forgotten your password? Click Here</span>
+	<span class="title"><a href="">Forgotten your password? Click Here</a></span>
 	</br>
 	<a href="index.php?location=registerPage" class="title">Don't have an account? Click here to get started!</span>
 </article>
