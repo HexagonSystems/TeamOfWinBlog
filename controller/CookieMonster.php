@@ -18,7 +18,6 @@
  */
 class CookieMonster
 {
-    private $database;
     private $user;
 
     public function __construct()
