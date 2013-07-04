@@ -334,7 +334,7 @@ class User
 
     public function updateUser()
     {
-        throw new Exception('Warning UpdateUser() Deprecated! Use save() instead');
+        //throw new Exception('Warning UpdateUser() Deprecated! Use save() instead');
 //        $query = "UPDATE `users` SET
 //                    `email` = :email,
 //                    `userPassword` = :password,

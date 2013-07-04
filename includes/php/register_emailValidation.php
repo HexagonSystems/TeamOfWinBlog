@@ -1,7 +1,6 @@
 <?php
 
-require_once '../../config/config.php';
-require_once '../../model/User.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/config/config_steve.php';
 
 $user = new User($conn);
 
