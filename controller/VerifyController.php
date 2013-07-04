@@ -2,15 +2,12 @@
 
 class VerifyController{
 	
-	private $model;
 	private $template;
 	private $footer;
 	private $nav;
 	private $database;
 	
 	private $mailView = 'mail';
-	private $loggedInView = 'loggedInView';
-	private $forgottenPassword = 'ResetPassword';
 	private $newPassView = 'newPass';
 	
 	private $mailData = array(

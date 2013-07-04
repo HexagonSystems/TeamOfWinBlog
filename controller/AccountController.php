@@ -23,8 +23,6 @@ class AccountController
             $user = unserialize($_SESSION['accountObject']);
             $user->setDatabase($this->conn);
             
-            var_dump($user);
-            
             if ($_GET['action'] == 'changeemail' && isset($_POST['password']) && isset($_POST['email'])) {
                 if($user->checkPassword($_POST["password"])){
                     $user->setEmail($_POST["email"]);
@@ -44,6 +42,6 @@ class AccountController
         $this->template = 'view/'.$this->fileName.'Template.php';
         include_once('view/'.$this->fileName.'.php');
         //create a new view and pass it our template
-        $view = new AccountView($this->template,$this->footer);
+        new AccountView($this->template,$this->footer);
     } // end function
 }

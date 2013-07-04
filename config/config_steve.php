@@ -25,6 +25,13 @@ spl_autoload_register(function () {
        require_once $_SERVER['DOCUMENT_ROOT']."/model/Comment.php";
 });
 
+spl_autoload_register(function () {
+       require_once $_SERVER['DOCUMENT_ROOT']."/model/Mail.php";
+});
+
+spl_autoload_register(function () {
+       require_once $_SERVER['DOCUMENT_ROOT']."/model/Verify.php";
+});
 
 require_once('password.php');
 /**
