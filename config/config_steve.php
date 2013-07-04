@@ -25,6 +25,8 @@ spl_autoload_register(function () {
        require_once $_SERVER['DOCUMENT_ROOT']."/model/Comment.php";
 });
 
+
+require_once('password.php');
 /**
  * Define database connection if using a database
 */

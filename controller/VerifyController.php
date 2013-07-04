@@ -1,7 +1,5 @@
 <?php
 
-require_once 'model/Verify.php';
-
 class VerifyController{
 	
 	private $model;
@@ -105,7 +103,7 @@ class VerifyController{
 						 * 	- Use this as the username
 						 * 
 						 * Obviously the exceptions would include if both pieces of data arn't set, or if a username/email can't be found.
-						 * If this is the case the system will exit(), although, this should be updated to produce a visually nice error message
+						 * If this is the case the system will return(), although, this should be updated to produce a visually nice error message
 						 */
 						
 						
@@ -122,11 +120,11 @@ class VerifyController{
 							if(isset($this->instructions['username'])){
 								$this->instructions['email'] = $user->getEmailFromUsername($this->instructions['username']);
 								if($this->instructions['email'] == ""){
-									exit ("Email failed");
+									return ("Email failed");
 								}
 							}else{
 								//Username not provided
-								exit("Username not provided");
+								return("Username not provided");
 							}
 						}else{
 							echo "Email set".$this->instructions['email'];
@@ -137,7 +135,7 @@ class VerifyController{
 								$this->instructions['username'] = $user->getUsernameFromEmail($this->instructions['email']);
 							}else{
 								//Email not provided
-								exit("Email not provided");
+								return("Email not provided");
 							}
 						}
 						
@@ -146,13 +144,13 @@ class VerifyController{
 						if($emailCheck !== "Email found")
 						{
 							//Email not valid
-							exit($emailCheck);
+							return($emailCheck);
 						}
 						$usernameCheck = $user->checkUsername($this->instructions['username']);
 						if($usernameCheck !== "Username found")
 						{
 							//Username not valid
-							exit($usernameCheck);
+							return($usernameCheck);
 						}
 						
 						if(isset($this->post['action']))
@@ -161,11 +159,11 @@ class VerifyController{
 							if($this->instructions['action'] !== 'registerAccount' && $this->post['action'] !== 'resetPassword')
 							{
 								//Action not valid
-								exit("Action not valid");
+								return("Action not valid");
 							}
 						}else{
 							//Action not provided
-							exit("Action was not provided");
+							return("Action was not provided");
 						}
 						
 						//Start the Verify class
@@ -194,12 +192,12 @@ class VerifyController{
 								if($lastHash != false && $lastHash != null){
 									$this->instructions = $lastHash;
 								}else{
-									exit("Something went wrong".$lastHash);
+									return("Something went wrong".$lastHash);
 								}
 							}
 						}else
 						{
-							exit("Something went wrong");
+							return("Something went wrong");
 						}
 											
 						$this->template = 'view/MailSentTemplate.php';
@@ -212,7 +210,7 @@ class VerifyController{
 					}else
 					{
 						//Action not provided
-						exit("Action not provided");
+						return("Action not provided");
 					}
 			}
 			
@@ -223,7 +221,7 @@ class VerifyController{
 			{
 				if(!isset($this->get['email']) || !isset($this->get['code']))
 				{
-					exit("Data missing");
+					return("Data missing");
 				}
 				
 				//Get data
@@ -243,10 +241,10 @@ class VerifyController{
 						$this->mailData['content'] = $this->registerAccountContent;
 					}else{
 						//Error
-						exit("No action found");
+						return("No action found");
 					}
 				}else{
-					exit("Retrieiving data failed");
+					return("Retrieiving data failed");
 				}
 				
 				$this->template = 'view/'.$this->mailView.'Template.php';
@@ -264,7 +262,7 @@ class VerifyController{
 			{
 				if(!isset($this->get['email']) || !isset($this->get['code']))
 				{
-					exit("Data missing");
+					return("Data missing");
 				}
 				
 				//Get data
@@ -290,11 +288,11 @@ class VerifyController{
 							if($result == "Updated"){
 								echo $username." updated";
 							}else{
-								exit("Error: ".$result);
+								return("Error: ".$result);
 							}
 							
 						}else{
-							exit("Something went wrong");
+							return("Something went wrong");
 						}
 					}else{
 						//Display enter new password screen
@@ -320,12 +318,12 @@ class VerifyController{
 							echo "Error: ".$result;
 						}
 					}else{
-						exit("Something went wrong");
+						return("Something went wrong");
 					}
 				}else
 				{
 					//Error
-					exit("No action found");
+					return("No action found");
 				}
 				
 			}
@@ -334,10 +332,10 @@ class VerifyController{
 			 * Action provided invalid
 			 */
 			else{
-				exit("Action not valid HERE".$this->get['action']);
+				return("Action not valid HERE".$this->get['action']);
 			}
 		}else{
-			exit("No action provided (end else)");
+			return("No action provided (end else)");
 			//header("Location: index.php?location=indexPage");
 		}
 	
