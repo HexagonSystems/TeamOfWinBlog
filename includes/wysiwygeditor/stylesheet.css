@@ -62,6 +62,7 @@ textarea:focus {
   display: inline;
 }
 .save input{
+  color:black !important;
   font-size: 12px;
   display: block;
   cursor: pointer;

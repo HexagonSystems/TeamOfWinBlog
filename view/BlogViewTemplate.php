@@ -1,4 +1,4 @@
-<section id="blogBox">
+<article class="post">
     <header>
         <?php echo $blog->getTitle(); ?>
     </header>
@@ -9,4 +9,4 @@
     <article>
         <?php echo $blog->getContent(); ?>
     </article>
-</section>
+</article>

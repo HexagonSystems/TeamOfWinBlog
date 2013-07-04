@@ -137,7 +137,7 @@ class Post extends Article
         $this->setPostid($this->database->lastInsertId());
         
         $this->load($this->getPostid());
-        var_dump($this);
+        //var_dump($this);
         return(true);
     }
 

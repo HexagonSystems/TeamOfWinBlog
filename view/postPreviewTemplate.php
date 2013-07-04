@@ -1,4 +1,4 @@
-<article>
+<article class="post">
     <header>
         <h2>
             <?php echo $blog->getTitle(); ?>

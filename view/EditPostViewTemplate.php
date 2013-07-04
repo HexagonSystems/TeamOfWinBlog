@@ -1,5 +1,5 @@
 <header><?=$title ?> Post</header>
-<form action="index.php?location=postPage&action=publishPost" method="post">
+<form action="index.php?location=postPage&action=publishPost" method="post" style="width:100%">
     <label>Title <input type="text" placeholder="Put a kick-ass title" name="title"></label>
     <label>Content
   <div class="wysihtml5">

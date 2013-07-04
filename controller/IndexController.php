@@ -1,6 +1,5 @@
 <?php
 
-require_once 'model/Post.php';
 class IndexController
 {
     private $template;

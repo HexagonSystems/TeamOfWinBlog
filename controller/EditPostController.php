@@ -35,7 +35,8 @@ class EditPostController
             /**
              * @todo Rig up a full user here instead of crutching on $_SESSION
              */
-            $postData = array('title' => $_POST['title'], 'displayStatus' => 'published', 'ACL' => 5, 'content' => $_POST['content'], 'username' => $_SESSION['username']);
+
+            $postData = array('title' => $_POST['title'], 'displayStatus' => 'published', 'ACL' => 5, 'content' => $_POST['content'], 'username' => $_SESSION['activeUser']);
             
             if($post->create($postData)){
                 

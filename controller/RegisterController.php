@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 require_once 'model/User.php';
 require_once 'controller/VerifyController.php';
 class RegisterController

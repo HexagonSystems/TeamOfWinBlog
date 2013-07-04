@@ -61,8 +61,11 @@ body{
 h1{
 	font-size:20px;
 	font-weight:bold;
-	color:white;
 	margin-right:20px;	
+}
+
+header h1{
+    	color:white;
 }
 
 h3{
@@ -245,4 +248,35 @@ button, input[type='submit'] {
 
 #content #passwordStrengthBar p {
 	font-size: 30px;
+}
+
+/* ==========================================================================
+  Blog posts
+  ========================================================================== */
+  
+.post{
+position:relative;
+display:block;
+width: 80%;
+margin:auto;
+margin-top:1em;
+border:1px solid #6699B6;
+border-radius:5px;
+background-color:white;
+}
+
+.post header h2, .post header p, .post header span{
+display:inline;
+margin: 0px 5% 0px 5%;
+}
+
+.post header h2{
+position:relative;
+text-align:left;
+}
+
+.post header, .post footer{
+width:100%;
+background-color: #649EB4;
+text-align:center;
 }
