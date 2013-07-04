@@ -205,12 +205,11 @@ button, input[type='submit'] {
 .messageBox {
 	display: table;
 	position: absolute;
-	margin-top: -45px;
+	margin-top: 40px;
 	min-width: 200px;
 	z-index: 3;
 	border: 1px solid black;
 	background-color: #FFFFFF;
-	left: 95%;
 	border-radius: 5px;
 	padding: 10px;
 	text-size: 20px;
@@ -221,3 +220,29 @@ button, input[type='submit'] {
 
 
 
+#content #passwordStrengthBar {
+	position: relative;
+	width: 80%;
+	height: 14px;
+	margin: auto;
+	padding: 3px;
+	border: 1px solid black;
+	border-radius: 5px;
+	background-color: #999;
+	overflow: hidden;
+	z-index: 1;
+}
+
+#content #passwordStrengthBar span {
+	position: relative;
+	display: block;
+	height: 100%;
+	width: 0px;
+	border-radius: 5px;
+	z-index: 2;
+	transition: width 0.5s linear, background-color 1s linear;
+}
+
+#content #passwordStrengthBar p {
+	font-size: 30px;
+}
