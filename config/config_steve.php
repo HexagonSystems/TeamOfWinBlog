@@ -28,7 +28,6 @@ spl_autoload_register(function () {
 /**
  * Define database connection if using a database
 */
-
 $host = "localhost";
 $db = "tow";
 $user = "towuser";
@@ -37,4 +36,3 @@ $conn = new PDO("mysql:host=$host;dbname=$db",$user,$pass);
 /**
  * Define any other config option you may want to use
 */
-?>

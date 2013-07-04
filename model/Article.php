@@ -18,15 +18,14 @@ class Article
      */
     public function __construct()
     {
-    	
+
     }//end construct
-	
+
     public function setDatabase(PDO $database)
     {
-    	$this->database = $database;
+        $this->database = $database;
     }
-        
-   	
+
     /**
      * Loads an existing article from the database
      *
@@ -39,7 +38,7 @@ class Article
     {
         return('Error load() not implemented');
     }//end loadArticle
-	*/
+    */
     /**
      * Stores the input data in the article object used for creating new article
      *
@@ -53,7 +52,7 @@ class Article
     {
         return('Error create() not implemented');
     }
-    
+
     /**
      * Uses the super cool on duplicate key update MySQL function to update an existing article
      * @return Boolean   True on sucess else false
@@ -66,8 +65,8 @@ class Article
 
     /**
      * Deletes the current article from the database
-     * 
-     * @return Boolean Sucess or failure
+     *
+     * @return Boolean   Sucess or failure
      * @throws Exception Database exceptions if query fails
      */
     public function delete()
@@ -108,7 +107,7 @@ class Article
 
     public function setDate($param)
     {
-        $this->article['date'] = $param;
+        $this->article['creationDate'] = $param;
     }
 
     public function setUsername($param)
@@ -119,7 +118,7 @@ class Article
     //*********GETTERS--------------
     public function getStatus()
     {
-        return($this->article['status']);
+        return($this->article['displayStatus']);
     }
 
     public function getACL()
@@ -134,7 +133,7 @@ class Article
 
     public function getDate()
     {
-        return($this->article['date']);
+        return($this->article['creationDate']);
     }
 
     public function getUsername()

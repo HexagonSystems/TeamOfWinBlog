@@ -87,12 +87,12 @@ class Comment extends Article
 
             return(false);
         };
-        
+
         $this->setCommentid($this->database->lastInsertId());
 
         return(true);
     }
-    
+
     /**
      * Uses the super cool on duplicate key update MySQL function to update an existing comment
      * @return Boolean   True on sucess else false
@@ -123,8 +123,8 @@ class Comment extends Article
 
     /**
      * Deletes the current comment from the database
-     * 
-     * @return Boolean Sucess or failure
+     *
+     * @return Boolean   Sucess or failure
      * @throws Exception Database exceptions if query fails
      */
     public function delete()
@@ -152,19 +152,18 @@ class Comment extends Article
     {
         $this->article['commentid'] = $param;
     }
-    
+
     public function setPostid($param)
     {
         $this->article['postid'] = $param;
     }
-
 
     //*********GETTERS--------------
     public function getComment()
     {
         return($this->article);
     }
-    
+
     public function getPostid()
     {
         return($this->article['postid']);
